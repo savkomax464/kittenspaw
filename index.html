@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Nails | Apple Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        iosBg: '#FCF8F9', // Очень светлый, почти белый розовый (как фон в iOS)
+                        iosCard: '#FFFFFF', // Белые карточки
+                        iosPink: '#FF2D55', // Фирменный розовый Apple (используется в Health/Fitness)
+                        iosPinkSoft: '#FFD4DE', // Мягкий розовый для выделений
+                        iosText: '#1D1D1F', // Почти черный для контраста
+                        iosGray: '#86868B', // Серый текст Apple
+                        iosBorder: 'rgba(255, 45, 85, 0.1)',
+                    },
+                    boxShadow: {
+                        'apple': '0 4px 24px rgba(0, 0, 0, 0.04)',
+                        'apple-btn': '0 4px 14px 0 rgba(255, 45, 85, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #FCF8F9;
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Эффект матового стекла Apple (Vibrancy) */
+        
+        .apple-glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+        }
+        /* Анимации появления при скролле */
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Плавное раскрытие категорий (Accordion) */
+        
+        .category-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        .category-content.open {
+            grid-template-rows: 1fr;
+        }
+        
+        .category-inner {
+            overflow: hidden;
+        }
+        /* Иконка шеврона */
+        
+        .chevron {
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        .chevron.open {
+            transform: rotate(180deg);
+        }
+        /* Навигация iOS-стиля (Слайды для календаря) */
+        
+        .nav-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .nav-view {
+            width: 100%;
+            transition: transform 0.4s cubic-bezier(0.36, 0.66, 0.04, 1), opacity 0.4s ease;
+        }
+        
+        .view-left {
+            transform: translateX(-100%);
+            position: absolute;
+            top: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .view-center {
+            transform: translateX(0);
+            position: relative;
+            opacity: 1;
+        }
+        
+        .view-right {
+            transform: translateX(100%);
+            position: absolute;
+            top: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+        /* Кнопки и карточки */
+        
+        .btn-press {
+            transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.15s;
+        }
+        
+        .btn-press:active {
+            transform: scale(0.96);
+            opacity: 0.8;
+        }
+        
+        .card-press {
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s;
+        }
+        
+        .card-press:active {
+            transform: scale(0.98);
+            background-color: #F9F9F9;
+        }
+    </style>
+</head>
+
+<body class="text-iosText antialiased pb-32">
+
+    <!-- Sticky Header (Apple Glass) -->
+    <nav class="sticky top-0 z-50 apple-glass">
+        <div class="px-4 py-3 flex justify-between items-center overflow-x-auto hide-scrollbar">
+            <div class="flex space-x-5 text-[15px] font-medium text-iosGray">
+                <a href="#about" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Обо мне</a>
+                <a href="#price" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Прайс</a>
+                <a href="#portfolio" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Работы</a>
+                <a href="#studio" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Студия</a>
+            </div>
+            <a href="#booking" class="bg-iosPink text-white px-4 py-1.5 rounded-full text-[14px] font-semibold shadow-apple-btn btn-press scroll-link">Запись</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="flex flex-col items-center justify-center text-center px-6 pt-16 pb-12 reveal">
+        <div class="w-32 h-32 mb-6 rounded-full overflow-hidden shadow-apple border border-iosPinkSoft relative">
+            <img src="images/avatar.jpg" alt="Мастер" class="w-full h-full object-cover">
+        </div>
+        <h1 class="text-[34px] leading-tight font-bold tracking-tight mb-3">Твой идеальный<br>маникюр.</h1>
+        <p class="text-[17px] text-iosGray mb-8 max-w-[280px] leading-relaxed">Безопасность. Эстетика. Носка до 4-х недель без сколов.</p>
+        <a href="#booking" class="bg-iosPink text-white px-8 py-3.5 rounded-2xl text-[17px] font-semibold shadow-apple-btn btn-press scroll-link w-full max-w-[280px]">Записаться</a>
+    </header>
+
+    <!-- Обо мне -->
+    <section id="about" class="px-4 py-6 reveal">
+        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Почему я?</h2>
+        <div class="bg-iosCard rounded-[24px] p-6 shadow-apple border border-black/5">
+            <p class="text-[15px] leading-relaxed text-iosGray mb-5">Я сертифицированный мастер. Мой приоритет — здоровье ваших ногтей и идеальный блик, который собирает комплименты.</p>
+            <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-iosPinkSoft flex items-center justify-center text-iosPink">✦</div>
+                    <span class="text-[15px] font-medium">100% стерилизация (Сухожар)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-iosPinkSoft flex items-center justify-center text-iosPink">✦</div>
+                    <span class="text-[15px] font-medium">Одноразовые расходники</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Прайс (iOS List Style) -->
+    <section id="price" class="px-4 py-6 reveal">
+        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Услуги</h2>
+        <div class="bg-iosCard rounded-[24px] shadow-apple border border-black/5 overflow-hidden">
+            <!-- Item 1 -->
+            <div class="p-4 flex justify-between items-center border-b border-black/5">
+                <div>
+                    <h3 class="text-[16px] font-semibold">Снятие + Маникюр + База</h3>
+                    <p class="text-[13px] text-iosGray mt-0.5">Однотонное покрытие</p>
+                </div>
+                <span class="text-[17px] font-medium text-iosGray whitespace-nowrap">1 800 ₽</span>
+            </div>
+            <!-- Item 2 -->
+            <div class="p-4 flex justify-between items-center border-b border-black/5">
+                <div>
+                    <h3 class="text-[16px] font-semibold">Наращивание</h3>
+                    <p class="text-[13px] text-iosGray mt-0.5">До длины 3, любой дизайн</p>
+                </div>
+                <span class="text-[17px] font-medium text-iosGray whitespace-nowrap">2 600 ₽</span>
+            </div>
+            <!-- Item 3 -->
+            <div class="p-4 flex justify-between items-center">
+                <div>
+                    <h3 class="text-[16px] font-semibold">Педикюр (Smart)</h3>
+                    <p class="text-[13px] text-iosGray mt-0.5">Обработка стоп + покрытие</p>
+                </div>
+                <span class="text-[17px] font-medium text-iosGray whitespace-nowrap">2 200 ₽</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Портфолио (Категории / Accordion) -->
+    <section id="portfolio" class="px-4 py-6 reveal">
+        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Мои работы</h2>
+        <div id="portfolio-container" class="space-y-3">
+            <!-- Категории генерируются через JS -->
+        </div>
+    </section>
+
+    <!-- Календарь (Apple Navigation Style) -->
+    <section id="booking" class="px-4 py-6 reveal">
+        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Выбор времени</h2>
+
+        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple border border-black/5 nav-container min-h-[360px]">
+
+            <!-- VIEW: Дни -->
+            <div id="view-dates" class="nav-view view-center">
+                <div class="flex justify-between items-center mb-6 px-1">
+                    <h3 class="text-[20px] font-bold tracking-tight" id="month-display">Октябрь 2023</h3>
+                    <div class="flex gap-3">
+                        <button onclick="changeMonth(-1)" class="w-8 h-8 flex items-center justify-center text-iosPink btn-press bg-iosPinkSoft rounded-full font-bold">❮</button>
+                        <button onclick="changeMonth(1)" class="w-8 h-8 flex items-center justify-center text-iosPink btn-press bg-iosPinkSoft rounded-full font-bold">❯</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 text-center text-[12px] font-medium text-iosGray mb-3">
+                    <div>Пн</div>
+                    <div>Вт</div>
+                    <div>Ср</div>
+                    <div>Чт</div>
+                    <div>Пт</div>
+                    <div class="text-iosPink">Сб</div>
+                    <div class="text-iosPink">Вс</div>
+                </div>
+
+                <div id="calendar-grid" class="grid grid-cols-7 gap-y-2 gap-x-1 justify-items-center">
+                    <!-- Дни из JS -->
+                </div>
+            </div>
+
+            <!-- VIEW: Время -->
+            <div id="view-times" class="nav-view view-right">
+                <button onclick="backToDates()" class="flex items-center text-[17px] text-iosPink mb-5 btn-press font-medium -ml-2">
+                    <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    Назад
+                </button>
+
+                <h3 class="text-[28px] font-bold tracking-tight mb-1" id="selected-date-display">15 Октября</h3>
+                <p class="text-[15px] text-iosGray mb-6">Выберите доступное время</p>
+
+                <div id="times-grid" class="grid grid-cols-3 gap-3">
+                    <!-- Время из JS -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Студия Тамилы и Видео -->
+    <section id="studio" class="px-4 py-6 reveal">
+        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Студия Kittenspaw</h2>
+        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple border border-black/5">
+
+            <!-- Адрес и иконка -->
+            <div class="flex items-start gap-4 mb-6">
+                <div class="w-10 h-10 rounded-full bg-iosPinkSoft flex shrink-0 items-center justify-center text-iosPink mt-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-[17px] font-semibold">Наш адрес</h3>
+                    <p class="text-[15px] text-iosGray mt-1 leading-relaxed">г. Москва, ул. Красивая, д. 1<br>БЦ "Оазис", 3 этаж, каб. 305</p>
+                </div>
+            </div>
+
+            <!-- Блок с видео -->
+            <div>
+                <h4 class="text-[16px] font-semibold mb-3">Как добраться:</h4>
+                <div class="w-full aspect-[9/16] max-h-[400px] bg-black/5 rounded-[16px] overflow-hidden relative shadow-inner">
+
+                    <!-- Вариант 1: Загруженное видео (MP4) -->
+                    <video class="w-full h-full object-cover" controls playsinline preload="metadata" poster="images/video-poster.jpg">
+                        <source src="images/video.mp4" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+
+                    <!-- Вариант 2: Если видео с YouTube Shorts / Reels (Раскомментировать, а <video> удалить) -->
+                    <!-- 
+                    <iframe 
+                        class="absolute top-0 left-0 w-full h-full" 
+                        src="https://www.youtube.com/embed/ID_ВИДЕО" 
+                        title="Как добраться" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe> 
+                    -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.MainButton.textColor = "#FFFFFF";
+        tg.MainButton.color = "#FF2D55"; // iosPink
+
+        // --- Анимация появления при скролле ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // --- Плавный скролл ---
+        document.querySelectorAll('.scroll-link').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.getElementById(this.getAttribute('href').substring(1));
+                if (target) {
+                    const offset = 60;
+                    window.scrollTo({
+                        top: target.getBoundingClientRect().top + window.pageYOffset - offset,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+
+        // --- ДАННЫЕ ОТ БОТА ---
+        const BOT_DATA = {
+            portfolio: [{
+                category: "Френч (French)",
+                images: [
+                    "images/french-1.jpg",
+                    "images/french-2.jpg"
+                ]
+            }, {
+                category: "Нюд и минимализм",
+                images: [
+                    "images/nude-1.jpg",
+                    "images/nude-2.jpg"
+                ]
+            }, {
+                category: "Яркие и дизайн",
+                images: [
+                    "images/bright-1.jpg",
+                    "images/bright-2.jpg"
+                ]
+            }],
+            bookedSlots: {
+                "2023-10-30": ["10:00", "14:00"]
+            },
+            allTimes: ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00"]
+        };
+
+        // --- РЕНДЕР ПОРТФОЛИО (Аккордеон) ---
+        const portfolioContainer = document.getElementById('portfolio-container');
+        BOT_DATA.portfolio.forEach((item, index) => {
+            // Генерируем картинки
+            const imagesHtml = item.images.map(src => `
+                <img src="${src}" class="w-full h-40 object-cover rounded-[16px] shadow-sm">
+            `).join('');
+
+            portfolioContainer.innerHTML += `
+                <div class="bg-iosCard rounded-[20px] shadow-apple border border-black/5 overflow-hidden">
+                    <button class="w-full px-5 py-4 flex justify-between items-center card-press outline-none" onclick="toggleCategory('cat-${index}', this)">
+                        <span class="text-[17px] font-semibold">${item.category}</span>
+                        <svg class="chevron w-5 h-5 text-iosGray" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="cat-${index}" class="category-content">
+                        <div class="category-inner">
+                            <div class="px-5 pb-5 grid grid-cols-2 gap-3 pt-1">
+                                ${imagesHtml}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        function toggleCategory(id, btnElement) {
+            const content = document.getElementById(id);
+            const chevron = btnElement.querySelector('.chevron');
+            content.classList.toggle('open');
+            chevron.classList.toggle('open');
+        }
+
+        // --- ЛОГИКА КАЛЕНДАРЯ ---
+        let currentDate = new Date();
+        let selectedFullDate = null;
+        let selectedTime = null;
+        const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            document.getElementById('month-display').innerText = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            let offset = firstDay === 0 ? 6 : firstDay - 1;
+
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < offset; i++) grid.innerHTML += `<div></div>`;
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(year, month, day);
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                const isPast = dateObj < today;
+
+                let btnClass = "w-10 h-10 flex items-center justify-center rounded-full text-[16px] transition-all ";
+                if (isPast) {
+                    btnClass += "text-black/20 cursor-not-allowed";
+                } else {
+                    btnClass += "text-iosText hover:bg-iosPinkSoft hover:text-iosPink btn-press cursor-pointer";
+                }
+
+                grid.innerHTML += `
+                    <button class="${btnClass}" ${isPast ? 'disabled' : `onclick="goToTimes('${dateStr}', ${day}, ${month})"`}>
+                        ${day}
+                    </button>
+                `;
+            }
+        }
+
+        function changeMonth(dir) {
+            currentDate.setMonth(currentDate.getMonth() + dir);
+            renderCalendar();
+        }
+
+        // Навигация Календаря
+        const viewDates = document.getElementById('view-dates');
+        const viewTimes = document.getElementById('view-times');
+
+        function goToTimes(dateStr, day, month) {
+            selectedFullDate = dateStr;
+            selectedTime = null;
+            tg.MainButton.hide();
+
+            document.getElementById('selected-date-display').innerText = `${day} ${monthNames[month].toLowerCase()}`;
+            renderTimeSlots(dateStr);
+
+            // Анимация Slide-In (как в iOS)
+            viewDates.className = "nav-view view-left";
+            viewTimes.className = "nav-view view-center";
+        }
+
+        function backToDates() {
+            selectedFullDate = null;
+            selectedTime = null;
+            tg.MainButton.hide();
+
+            // Анимация Slide-Out
+            viewTimes.className = "nav-view view-right";
+            viewDates.className = "nav-view view-center";
+        }
+
+        function renderTimeSlots(dateStr) {
+            const grid = document.getElementById('times-grid');
+            grid.innerHTML = '';
+            
+            const booked = BOT_DATA.bookedSlots[dateStr] || [];
+            const demoBooked = booked.length > 0 ? booked : (Math.random() > 0.5 ? ["12:00", "16:00"] : []);
+
+            BOT_DATA.allTimes.forEach(time => {
+                const isBooked = demoBooked.includes(time);
+                let btnClass = "py-3 rounded-[16px] text-[16px] font-medium transition-all ";
+                
+                if (isBooked) {
+                    btnClass += "bg-black/5 text-black/30 cursor-not-allowed";
+                } else {
+                    btnClass += "bg-iosPinkSoft/40 text-iosPink btn-press cursor-pointer border border-iosPink/10 hover:bg-iosPinkSoft";
+                }
+
+                grid.innerHTML += `
+                    <button id="time-${time.replace(':','')}" class="${btnClass}" ${isBooked ? 'disabled' : `onclick="selectTime('${time}')"`}>
+                        ${time}
+                    </button>
+                `;
+            });
+        }
+
+        function selectTime(time) {
+            BOT_DATA.allTimes.forEach(t => {
+                const el = document.getElementById(`time-${t.replace(':','')}`);
+                if (el && !el.hasAttribute('disabled')) {
+                    el.className = "py-3 rounded-[16px] text-[16px] font-medium transition-all bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10";
+                }
+            });
+
+            const selectedEl = document.getElementById(`time-${time.replace(':','')}`);
+            selectedEl.className = "py-3 rounded-[16px] text-[16px] font-bold transition-all bg-iosPink text-white shadow-apple-btn scale-105";
+
+            selectedTime = time;
+            tg.MainButton.setText(`ЗАПИСАТЬСЯ: ${selectedFullDate} в ${time}`);
+            tg.MainButton.show();
+        }
+
+        renderCalendar();
+
+        // --- ОТПРАВКА ДАННЫХ ---
+        tg.MainButton.onClick(() => {
+            const userData = tg.initDataUnsafe?.user || {};
+            const payload = {
+                action: "book_appointment",
+                date: selectedFullDate,
+                time: selectedTime,
+                client: {
+                    id: userData.id,
+                    username: userData.username ? `@${userData.username}` : '',
+                    name: userData.first_name || 'Клиент'
+                }
+            };
+            tg.sendData(JSON.stringify(payload));
+        });
+    </script>
+</body>
+
+</html>
