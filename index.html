@@ -91,6 +91,7 @@
                 <a href="#price" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Прайс</a>
                 <a href="#portfolio" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Работы</a>
                 <a href="#studio" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Студия</a>
+                <a href="#manager" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Менеджер</a>
             </div>
             <a href="#booking" class="bg-iosPink text-white px-4 py-1.5 rounded-full text-[14px] font-semibold shadow-apple-btn btn-press scroll-link">Запись</a>
         </div>
@@ -260,7 +261,7 @@
     </section>
 
     <!-- Связаться с менеджером -->
-    <section class="px-4 py-6 reveal">
+    <section id="manager" class="px-4 py-6 reveal">
         <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Связаться с менеджером</h2>
         <div class="bg-iosCard rounded-[24px] p-5 shadow-apple border border-black/5">
             <p class="text-[15px] text-iosGray mb-4 px-1">Опишите ваш вопрос, и мы свяжемся с вами в ближайшее время</p>
@@ -399,17 +400,22 @@
                 
                 const isPast = dateObj < today;
                 const isTooFar = dateObj > maxDate;
+                const isToday = dateObj.getTime() === today.getTime();
+                const isTomorrow = dateObj.getTime() === today.getTime() + 86400000;
                 const isDisabled = isPast || isTooFar;
+                const needsManagerApproval = isToday || isTomorrow;
 
                 let btnClass = "w-10 h-10 flex items-center justify-center rounded-full text-[16px] transition-all ";
                 if (isDisabled) {
                     btnClass += "text-black/20 cursor-not-allowed";
+                } else if (needsManagerApproval) {
+                    btnClass += "text-iosPink bg-iosPinkSoft/30 border border-iosPink/20 btn-press cursor-pointer";
                 } else {
                     btnClass += "text-iosText hover:bg-iosPinkSoft hover:text-iosPink btn-press cursor-pointer";
                 }
 
                 grid.innerHTML += `
-                    <button class="${btnClass}" ${isDisabled ? 'disabled' : `onclick="goToServices('${dateStr}', ${day}, ${month})"`}>
+                    <button class="${btnClass}" ${isDisabled ? 'disabled' : `onclick="handleDateClick('${dateStr}', ${day}, ${month}, ${needsManagerApproval})"`}>
                         ${day}
                     </button>
                 `;
@@ -419,6 +425,25 @@
         function changeMonth(dir) {
             currentDate.setMonth(currentDate.getMonth() + dir);
             renderCalendar();
+        }
+
+        // --- ОБРАБОТКА КЛИКА ПО ДАТЕ ---
+        function handleDateClick(dateStr, day, month, needsManagerApproval) {
+            if (needsManagerApproval) {
+                // Показываем сообщение с предложением обратиться к менеджеру
+                tg.showConfirm(
+                    `Запись на ${day} ${monthNamesGen[month]} возможна только по договорённости с менеджером. Перейти к связи с менеджером?`,
+                    function(confirmed) {
+                        if (confirmed) {
+                            // Скролл к секции менеджера
+                            document.getElementById('manager').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            document.getElementById('manager-message').focus();
+                        }
+                    }
+                );
+            } else {
+                goToServices(dateStr, day, month);
+            }
         }
 
         // --- НАВИГАЦИЯ ШАГОВ ---
