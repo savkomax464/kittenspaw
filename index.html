@@ -217,6 +217,18 @@
                 document.getElementById('map-link').href = settings.studio_map_url || '#';
                 document.getElementById('instagram-link').href = settings.instagram_url || '#';
 
+                // Генерируем слоты времени из work_start и work_end если нет готовых
+                if (timeSlots.length === 0 && schedule.work_start && schedule.work_end) {
+                    const [startH, startM] = schedule.work_start.split(':').map(Number);
+                    const [endH, endM] = schedule.work_end.split(':').map(Number);
+                    const slots = [];
+                    for (let h = startH; h <= endH; h++) {
+                        const time = `${String(h).padStart(2,'0')}:${startM||'00'}`;
+                        slots.push({ time });
+                    }
+                    timeSlots = slots;
+                }
+
                 // Рендерим
                 renderServices();
                 renderPortfolio();
