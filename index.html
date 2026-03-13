@@ -482,6 +482,9 @@
 
             document.getElementById('view-dates').className = "nav-view view-left";
             document.getElementById('view-services').className = "nav-view view-center";
+            
+            // Сбрасываем фокус с кнопки дня
+            document.activeElement.blur();
         }
 
         function backToDates() {
@@ -496,7 +499,7 @@
             grid.innerHTML = '';
             BOT_DATA.services.forEach(svc => {
                 grid.innerHTML += `
-                    <button onclick="goToTimes('${svc.name}', ${svc.durationSlots})" class="w-full text-left p-4 rounded-[20px] border border-iosPink/10 bg-iosCard shadow-sm hover:bg-iosPinkSoft/40 transition-all btn-press flex justify-between items-center">
+                    <button onclick="goToTimes('${svc.name}', ${svc.durationSlots})" class="w-full text-left p-4 rounded-[20px] border border-black/5 bg-iosCard shadow-sm hover:bg-black/5 transition-all btn-press flex justify-between items-center">
                         <div>
                             <h4 class="text-[17px] font-semibold text-iosText">${svc.name}</h4>
                             <p class="text-[13px] text-iosGray mt-1">${svc.desc}</p>
