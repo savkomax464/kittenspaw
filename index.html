@@ -78,6 +78,12 @@
         .btn-press:active { transform: scale(0.96); opacity: 0.8; }
         .card-press { transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s; }
         .card-press:active { transform: scale(0.98); background-color: #F9F9F9; }
+        
+        @keyframes slide-up {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
     </style>
 </head>
 
@@ -91,7 +97,6 @@
                 <a href="#price" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Прайс</a>
                 <a href="#portfolio" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Работы</a>
                 <a href="#studio" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Студия</a>
-                <a href="#manager" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Менеджер</a>
             </div>
             <a href="#booking" class="bg-iosPink text-white px-4 py-1.5 rounded-full text-[14px] font-semibold shadow-apple-btn btn-press scroll-link">Запись</a>
         </div>
@@ -430,20 +435,39 @@
         // --- ОБРАБОТКА КЛИКА ПО ДАТЕ ---
         function handleDateClick(dateStr, day, month, needsManagerApproval) {
             if (needsManagerApproval) {
-                // Показываем сообщение с предложением обратиться к менеджеру
-                tg.showConfirm(
-                    `Запись на ${day} ${monthNamesGen[month]} возможна только по договорённости с менеджером. Перейти к связи с менеджером?`,
-                    function(confirmed) {
-                        if (confirmed) {
-                            // Скролл к секции менеджера
-                            document.getElementById('manager').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            document.getElementById('manager-message').focus();
-                        }
-                    }
-                );
+                // Показываем модальное окно с кнопкой связи с менеджером
+                const modalHtml = `
+                    <div id="manager-modal" class="fixed inset-0 z-[100] flex items-end justify-center bg-black/50" onclick="closeManagerModal()">
+                        <div class="bg-iosCard w-full max-w-md rounded-t-[24px] p-6 pb-10 animate-slide-up" onclick="event.stopPropagation()">
+                            <div class="w-12 h-1 bg-black/20 rounded-full mx-auto mb-6"></div>
+                            <h3 class="text-[20px] font-bold text-iosText mb-2">Запись на ${day} ${monthNamesGen[month]}</h3>
+                            <p class="text-[15px] text-iosGray mb-6">К сожалению, на этот день запись возможна только по договорённости с менеджером. Напишите нам, и мы подберём удобное время!</p>
+                            <button onclick="goToManagerFromModal()" class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press mb-3">
+                                Связаться с менеджером
+                            </button>
+                            <button onclick="closeManagerModal()" class="w-full bg-black/5 text-iosText py-4 rounded-[20px] text-[17px] font-medium btn-press">
+                                Отмена
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
             } else {
                 goToServices(dateStr, day, month);
             }
+        }
+
+        function closeManagerModal() {
+            const modal = document.getElementById('manager-modal');
+            if (modal) modal.remove();
+        }
+
+        function goToManagerFromModal() {
+            closeManagerModal();
+            document.getElementById('manager').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                document.getElementById('manager-message').focus();
+            }, 500);
         }
 
         // --- НАВИГАЦИЯ ШАГОВ ---
