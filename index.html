@@ -246,6 +246,41 @@
         </div>
     </section>
 
+    <!-- Карта -->
+    <section class="px-4 py-6 reveal">
+        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Карта</h2>
+        <div class="bg-iosCard rounded-[24px] p-0 shadow-apple border border-black/5 overflow-hidden">
+            <iframe 
+                src="https://yandex.ru/map-widget/v1/?ll=37.617635%2C55.755814&z=12" 
+                class="w-full h-[300px]" 
+                frameborder="0" 
+                allowfullscreen="true">
+            </iframe>
+        </div>
+    </section>
+
+    <!-- Связаться с менеджером -->
+    <section class="px-4 py-6 reveal">
+        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Связаться с менеджером</h2>
+        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple border border-black/5">
+            <p class="text-[15px] text-iosGray mb-4 px-1">Опишите ваш вопрос, и мы свяжемся с вами в ближайшее время</p>
+            <div class="flex flex-col gap-3">
+                <textarea 
+                    id="manager-message" 
+                    rows="4" 
+                    placeholder="Введите ваше сообщение..." 
+                    class="w-full p-4 rounded-[20px] border border-iosPink/10 bg-black/5 text-iosText text-[15px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 resize-none"
+                ></textarea>
+                <button 
+                    onclick="sendToManager()" 
+                    class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press"
+                >
+                    Отправить
+                </button>
+            </div>
+        </div>
+    </section>
+
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
@@ -525,6 +560,32 @@
 
             tg.sendData(JSON.stringify(payload));
         });
+
+        // --- ОТПРАВКА СООБЩЕНИЯ МЕНЕДЖЕРУ ---
+        function sendToManager() {
+            const messageInput = document.getElementById('manager-message');
+            const message = messageInput.value.trim();
+            
+            if (!message) {
+                tg.showAlert('Пожалуйста, введите сообщение');
+                return;
+            }
+
+            const userData = tg.initDataUnsafe?.user || {};
+            
+            const payload = {
+                action: "contact_manager",
+                message: message,
+                client: {
+                    id: userData.id,
+                    username: userData.username ? `@${userData.username}` : '',
+                    name: userData.first_name || 'Клиент'
+                }
+            };
+
+            tg.sendData(JSON.stringify(payload));
+            messageInput.value = '';
+        }
     </script>
 </body>
 </html>
