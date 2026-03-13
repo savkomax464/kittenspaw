@@ -79,6 +79,10 @@
         .card-press { transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s; }
         .card-press:active { transform: scale(0.98); background-color: #F9F9F9; }
         
+        /* Сброс active состояния при смене views */
+        .nav-view { pointer-events: none; }
+        .nav-view.view-center { pointer-events: auto; }
+        
         @keyframes slide-up {
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
@@ -480,18 +484,20 @@
             document.getElementById('selected-date-display-svc').innerText = `${day} ${monthNamesGen[month]}`;
             renderServices();
 
+            // Сначала скрываем старый view, потом показываем новый
             document.getElementById('view-dates').className = "nav-view view-left";
-            document.getElementById('view-services').className = "nav-view view-center";
-            
-            // Сбрасываем фокус с кнопки дня
-            document.activeElement.blur();
+            setTimeout(() => {
+                document.getElementById('view-services').className = "nav-view view-center";
+            }, 50);
         }
 
         function backToDates() {
             selectedFullDate = null;
             tg.MainButton.hide();
-            document.getElementById('view-dates').className = "nav-view view-center";
             document.getElementById('view-services').className = "nav-view view-right";
+            setTimeout(() => {
+                document.getElementById('view-dates').className = "nav-view view-center";
+            }, 50);
         }
 
         function renderServices() {
@@ -522,14 +528,18 @@
             renderTimeSlots(selectedFullDate);
 
             document.getElementById('view-services').className = "nav-view view-left";
-            document.getElementById('view-times').className = "nav-view view-center";
+            setTimeout(() => {
+                document.getElementById('view-times').className = "nav-view view-center";
+            }, 50);
         }
 
         function backToServices() {
             selectedTime = null;
             tg.MainButton.hide();
             document.getElementById('view-times').className = "nav-view view-right";
-            document.getElementById('view-services').className = "nav-view view-center";
+            setTimeout(() => {
+                document.getElementById('view-services').className = "nav-view view-center";
+            }, 50);
         }
 
         function renderTimeSlots(dateStr) {
