@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kittenspaw | Запись</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-                    },
                     colors: {
-                        iosBg: '#FCF8F9', 
-                        iosCard: '#FFFFFF', 
-                        iosPink: '#FF2D55', 
-                        iosPinkSoft: '#FFD4DE', 
-                        iosText: '#1D1D1F', 
-                        iosGray: '#86868B', 
-                        iosBorder: 'rgba(255, 45, 85, 0.1)',
+                        iosBg: '#FCF8F9',
+                        iosCard: '#FFFFFF',
+                        iosPink: '#FF2D55',
+                        iosPinkSoft: '#FFD4DE',
+                        iosText: '#1D1D1F',
+                        iosGray: '#86868B',
                     },
                     boxShadow: {
                         'apple': '0 4px 24px rgba(0, 0, 0, 0.04)',
@@ -32,273 +26,144 @@
             }
         }
     </script>
-
     <style>
         html { scroll-behavior: smooth; }
         body { -webkit-tap-highlight-color: transparent; background-color: #FCF8F9; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
         .apple-glass {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
         }
-        
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        
-        .category-content {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .category-content.open { grid-template-rows: 1fr; }
-        .category-inner { overflow: hidden; }
-        
-        .chevron { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .chevron.open { transform: rotate(180deg); }
-        
-        /* 3-х шаговая навигация iOS */
-        .nav-container { position: relative; overflow: hidden; width: 100%; }
-        .nav-view {
-            width: 100%;
-            transition: transform 0.4s cubic-bezier(0.36, 0.66, 0.04, 1), opacity 0.4s ease;
-        }
+        .btn-press:active { transform: scale(0.96); }
+        .card-press:active { transform: scale(0.98); }
+        .nav-view { transition: transform 0.3s ease, opacity 0.3s ease; }
         .view-left { transform: translateX(-100%); position: absolute; top: 0; opacity: 0; pointer-events: none; }
         .view-center { transform: translateX(0); position: relative; opacity: 1; }
         .view-right { transform: translateX(100%); position: absolute; top: 0; opacity: 0; pointer-events: none; }
-        
-        .btn-press { transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.15s; }
-        .btn-press:active { transform: scale(0.96); opacity: 0.8; }
-        .card-press { transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s; }
-        .card-press:active { transform: scale(0.98); background-color: #F9F9F9; }
-        
-        /* Сброс active состояния при смене views */
-        .nav-view { pointer-events: none; }
-        .nav-view.view-center { pointer-events: auto; }
-        
+        .nav-container { position: relative; overflow: hidden; width: 100%; }
+        .chevron { transition: transform 0.3s; }
+        .chevron.open { transform: rotate(180deg); }
+        .category-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s ease;
+        }
+        .category-content.open { grid-template-rows: 1fr; }
         @keyframes slide-up {
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
         }
-        .animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .animate-slide-up { animation: slide-up 0.3s ease; }
     </style>
 </head>
-
 <body class="text-iosText antialiased pb-32">
 
-    <!-- Верхнее меню -->
+    <!-- Навигация -->
     <nav class="sticky top-0 z-50 apple-glass">
-        <div class="px-4 py-3 flex justify-between items-center overflow-x-auto hide-scrollbar">
-            <div class="flex space-x-5 text-[15px] font-medium text-iosGray">
-                <a href="#about" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Обо мне</a>
-                <a href="#price" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Прайс</a>
-                <a href="#portfolio" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Работы</a>
-                <a href="#studio" class="hover:text-iosPink transition scroll-link whitespace-nowrap">Студия</a>
+        <div class="px-4 py-3 flex justify-between items-center">
+            <div class="flex space-x-4 text-[14px] font-medium text-iosGray">
+                <a href="#services" class="hover:text-iosPink transition">Услуги</a>
+                <a href="#portfolio" class="hover:text-iosPink transition">Работы</a>
+                <a href="#booking" class="hover:text-iosPink transition">Запись</a>
             </div>
-            <a href="#booking" class="bg-iosPink text-white px-4 py-1.5 rounded-full text-[14px] font-semibold shadow-apple-btn btn-press scroll-link">Запись</a>
+            <a href="#booking" class="bg-iosPink text-white px-4 py-1.5 rounded-full text-[13px] font-semibold btn-press">Записаться</a>
         </div>
     </nav>
 
-    <!-- Главный экран -->
-    <header class="flex flex-col items-center justify-center text-center px-6 pt-16 pb-12 reveal">
-        <div class="w-32 h-32 mb-6 rounded-full overflow-hidden shadow-apple border border-iosPinkSoft relative">
-            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=400" alt="Мастер" class="w-full h-full object-cover">
+    <!-- Заголовок -->
+    <header class="flex flex-col items-center justify-center text-center px-6 pt-12 pb-8">
+        <div class="w-28 h-28 mb-4 rounded-full overflow-hidden shadow-apple border-2 border-iosPinkSoft">
+            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400" alt="Мастер" class="w-full h-full object-cover" id="master-photo">
         </div>
-        <h1 class="text-[34px] leading-tight font-bold tracking-tight mb-3">Студия<br>Kittenspaw</h1>
-        <p class="text-[17px] text-iosGray mb-8 max-w-[280px] leading-relaxed">Идеальный маникюр. Безопасность. Носка до 4-х недель без сколов.</p>
-        <a href="#booking" class="bg-iosPink text-white px-8 py-3.5 rounded-2xl text-[17px] font-semibold shadow-apple-btn btn-press scroll-link w-full max-w-[280px]">Записаться онлайн</a>
+        <h1 class="text-[28px] font-bold mb-2" id="studio-name">Kittenspaw</h1>
+        <p class="text-[15px] text-iosGray" id="studio-desc">Идеальный маникюр. Безопасность. Носка до 4-х недель.</p>
     </header>
 
-    <!-- Обо мне -->
-    <section id="about" class="px-4 py-6 reveal">
-        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Почему мы?</h2>
-        <div class="bg-iosCard rounded-[24px] p-6 shadow-apple border border-black/5">
-            <p class="text-[15px] leading-relaxed text-iosGray mb-5">Наш приоритет — здоровье ваших ногтей и идеальный блик, который собирает комплименты.</p>
-            <div class="space-y-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-iosPinkSoft flex items-center justify-center text-iosPink">✦</div>
-                    <span class="text-[15px] font-medium">100% стерилизация (Сухожар)</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-iosPinkSoft flex items-center justify-center text-iosPink">✦</div>
-                    <span class="text-[15px] font-medium">Одноразовые расходники</span>
-                </div>
-            </div>
+    <!-- Услуги (динамические) -->
+    <section id="services" class="px-4 py-4">
+        <h2 class="text-[20px] font-bold mb-3 px-2">Услуги</h2>
+        <div id="services-container" class="space-y-2">
+            <div class="text-center py-8 text-iosGray">Загрузка...</div>
         </div>
     </section>
 
-    <!-- Прайс -->
-    <section id="price" class="px-4 py-6 reveal">
-        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Услуги</h2>
-        <div class="bg-iosCard rounded-[24px] shadow-apple border border-black/5 overflow-hidden">
-            <div class="p-4 flex justify-between items-center border-b border-black/5">
-                <div>
-                    <h3 class="text-[16px] font-semibold">Маникюр + Однотонное</h3>
-                    <p class="text-[13px] text-iosGray mt-0.5">Базовое покрытие (1 час)</p>
-                </div>
-                <span class="text-[17px] font-medium text-iosGray whitespace-nowrap">1 800 ₽</span>
-            </div>
-            <div class="p-4 flex justify-between items-center border-b border-black/5">
-                <div>
-                    <h3 class="text-[16px] font-semibold">Крейзи дизайн / Френч</h3>
-                    <p class="text-[13px] text-iosGray mt-0.5">Сложная работа (2 часа)</p>
-                </div>
-                <span class="text-[17px] font-medium text-iosGray whitespace-nowrap">2 600 ₽</span>
-            </div>
-            <div class="p-4 flex justify-between items-center">
-                <div>
-                    <h3 class="text-[16px] font-semibold">Педикюр (Smart)</h3>
-                    <p class="text-[13px] text-iosGray mt-0.5">Обработка стоп + покрытие</p>
-                </div>
-                <span class="text-[17px] font-medium text-iosGray whitespace-nowrap">2 200 ₽</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Портфолио -->
-    <section id="portfolio" class="px-4 py-6 reveal">
-        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Мои работы</h2>
+    <!-- Портфолио (динамическое) -->
+    <section id="portfolio" class="px-4 py-4">
+        <h2 class="text-[20px] font-bold mb-3 px-2">Наши работы</h2>
         <div id="portfolio-container" class="space-y-3">
-            <!-- Генерируется из JS -->
+            <div class="text-center py-8 text-iosGray">Загрузка...</div>
         </div>
     </section>
 
-    <!-- УМНЫЙ ВИДЖЕТ ЗАПИСИ (День -> Услуга -> Время) -->
-    <section id="booking" class="px-4 py-6 reveal">
-        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Выбор времени</h2>
+    <!-- Адрес (динамический) -->
+    <section id="address" class="px-4 py-4">
+        <h2 class="text-[20px] font-bold mb-3 px-2">Адрес</h2>
+        <div class="bg-iosCard rounded-[20px] p-4 shadow-apple">
+            <p class="text-[15px] text-iosGray" id="address-text">Загрузка...</p>
+            <a id="map-link" href="#" target="_blank" class="inline-block mt-3 text-iosPink font-medium">🗺 Показать на карте</a>
+        </div>
+    </section>
 
-        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple border border-black/5 nav-container min-h-[420px]">
-
-            <!-- ШАГ 1: Дни -->
+    <!-- Запись -->
+    <section id="booking" class="px-4 py-4">
+        <h2 class="text-[20px] font-bold mb-3 px-2">Запись</h2>
+        <div class="bg-iosCard rounded-[20px] p-4 shadow-apple nav-container min-h-[400px]">
+            
+            <!-- Шаг 1: Дата -->
             <div id="view-dates" class="nav-view view-center">
-                <div class="flex justify-between items-center mb-6 px-1">
-                    <h3 class="text-[20px] font-bold tracking-tight" id="month-display">Октябрь 2023</h3>
-                    <div class="flex gap-3">
-                        <button id="btn-prev-month" onclick="changeMonth(-1)" class="w-8 h-8 flex items-center justify-center text-iosPink btn-press bg-iosPinkSoft rounded-full font-bold transition-opacity">❮</button>
-                        <button id="btn-next-month" onclick="changeMonth(1)" class="w-8 h-8 flex items-center justify-center text-iosPink btn-press bg-iosPinkSoft rounded-full font-bold transition-opacity">❯</button>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-[18px] font-bold" id="month-display">Месяц</h3>
+                    <div class="flex gap-2">
+                        <button onclick="changeMonth(-1)" class="w-8 h-8 bg-iosPinkSoft text-iosPink rounded-full btn-press">❮</button>
+                        <button onclick="changeMonth(1)" class="w-8 h-8 bg-iosPinkSoft text-iosPink rounded-full btn-press">❯</button>
                     </div>
                 </div>
-
-                <div class="grid grid-cols-7 gap-1 text-center text-[12px] font-medium text-iosGray mb-3">
+                <div class="grid grid-cols-7 gap-1 text-center text-[11px] text-iosGray mb-2">
                     <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div class="text-iosPink">Сб</div><div class="text-iosPink">Вс</div>
                 </div>
-
-                <div id="calendar-grid" class="grid grid-cols-7 gap-y-2 gap-x-1 justify-items-center">
-                    <!-- Дни из JS -->
-                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1 justify-items-center"></div>
             </div>
 
-            <!-- ШАГ 2: Выбор дизайна/услуги -->
+            <!-- Шаг 2: Услуга -->
             <div id="view-services" class="nav-view view-right">
-                <button onclick="backToDates()" class="flex items-center text-[17px] text-iosPink mb-5 btn-press font-medium -ml-2">
-                    <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                <button onclick="backToDates()" class="text-iosPink mb-3 btn-press flex items-center">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                     Назад
                 </button>
-
-                <h3 class="text-[28px] font-bold tracking-tight mb-1" id="selected-date-display-svc">15 октября</h3>
-                <p class="text-[15px] text-iosGray mb-6">Выберите услугу (от этого зависит время)</p>
-
-                <div id="services-grid" class="flex flex-col gap-3">
-                    <!-- Услуги генерируются из JS -->
-                </div>
+                <h3 class="text-[24px] font-bold mb-1" id="selected-date">Дата</h3>
+                <p class="text-[13px] text-iosGray mb-3">Выберите услугу</p>
+                <div id="services-grid" class="space-y-2"></div>
             </div>
 
-            <!-- ШАГ 3: Время -->
+            <!-- Шаг 3: Время -->
             <div id="view-times" class="nav-view view-right">
-                <button onclick="backToServices()" class="flex items-center text-[17px] text-iosPink mb-5 btn-press font-medium -ml-2">
-                    <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
-                    К услугам
+                <button onclick="backToServices()" class="text-iosPink mb-3 btn-press flex items-center">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Назад
                 </button>
-
-                <h3 class="text-[22px] font-bold tracking-tight mb-1 leading-tight" id="selected-service-display">Базовый</h3>
-                <p class="text-[15px] text-iosGray mb-6">Доступное время</p>
-
-                <div id="times-grid" class="grid grid-cols-3 gap-3">
-                    <!-- Время из JS -->
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Студия и Видео -->
-    <section id="studio" class="px-4 py-6 reveal">
-        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Студия Kittenspaw</h2>
-        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple border border-black/5">
-            <div class="flex items-start gap-4 mb-6">
-                <div class="w-10 h-10 rounded-full bg-iosPinkSoft flex shrink-0 items-center justify-center text-iosPink mt-1">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-[17px] font-semibold">Наш адрес</h3>
-                    <p class="text-[15px] text-iosGray mt-1 leading-relaxed">г. Москва, ул. Красивая, д. 1<br>БЦ "Оазис", 3 этаж, каб. 305</p>
-                </div>
-            </div>
-            <div>
-                <h4 class="text-[16px] font-semibold mb-3">Как добраться:</h4>
-                <div class="w-full aspect-[9/16] max-h-[400px] bg-black/5 rounded-[16px] overflow-hidden relative shadow-inner">
-                    <video class="w-full h-full object-cover" controls playsinline preload="metadata" poster="https://images.unsplash.com/photo-1517409080053-979b936e7116?auto=format&fit=crop&w=400&q=80">
-                        <source src="URL_ВАШЕГО_ВИДЕО.mp4" type="video/mp4">
-                        Ваш браузер не поддерживает видео.
-                    </video>
-                </div>
+                <h3 class="text-[18px] font-bold mb-1" id="selected-service">Услуга</h3>
+                <p class="text-[13px] text-iosGray mb-3">Выберите время</p>
+                <div id="times-grid" class="grid grid-cols-3 gap-2"></div>
             </div>
         </div>
     </section>
 
-    <!-- Карта -->
-    <section class="px-4 py-6 reveal">
-        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Карта</h2>
-        <div class="bg-iosCard rounded-[24px] p-0 shadow-apple border border-black/5 overflow-hidden">
-            <iframe 
-                src="https://yandex.ru/map-widget/v1/?ll=37.617635%2C55.755814&z=12" 
-                class="w-full h-[300px]" 
-                frameborder="0" 
-                allowfullscreen="true">
-            </iframe>
-        </div>
-    </section>
-
-    <!-- Связаться с менеджером -->
-    <section id="manager" class="px-4 py-6 reveal">
-        <h2 class="text-[22px] font-bold tracking-tight mb-4 px-2">Связаться с менеджером</h2>
-        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple border border-black/5">
-            <p class="text-[15px] text-iosGray mb-4 px-1">Опишите ваш вопрос, и мы свяжемся с вами в ближайшее время</p>
-            <div class="flex flex-col gap-3">
-                <textarea 
-                    id="manager-message" 
-                    rows="4" 
-                    placeholder="Введите ваше сообщение..." 
-                    class="w-full p-4 rounded-[20px] border border-iosPink/10 bg-black/5 text-iosText text-[15px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 resize-none caret-iosText"
-                    style="caret-color: #1D1D1F;"
-                ></textarea>
-                <button 
-                    onclick="sendToManager()" 
-                    class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press"
-                >
-                    Отправить
-                </button>
-            </div>
+    <!-- Связаться -->
+    <section class="px-4 py-4">
+        <h2 class="text-[20px] font-bold mb-3 px-2">Связаться</h2>
+        <div class="bg-iosCard rounded-[20px] p-4 shadow-apple">
+            <textarea id="manager-message" rows="3" placeholder="Ваше сообщение..." class="w-full p-3 rounded-[16px] border border-iosPink/10 bg-black/5 text-[15px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 resize-none"></textarea>
+            <button onclick="sendToManager()" class="w-full mt-3 bg-iosPink text-white py-3 rounded-[18px] font-semibold btn-press">Отправить</button>
         </div>
     </section>
 
     <!-- Соцсети -->
-    <section class="px-4 py-6 reveal">
-        <div class="flex justify-center gap-6">
-            <a href="https://instagram.com/username" class="flex items-center justify-center w-14 h-14 rounded-full bg-iosPink text-white shadow-apple-btn btn-press">
-                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
+    <section class="px-4 py-4 pb-8">
+        <div class="flex justify-center gap-4">
+            <a href="#" id="instagram-link" class="w-12 h-12 rounded-full bg-iosPink text-white flex items-center justify-center btn-press">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             </a>
         </div>
     </section>
@@ -309,102 +174,112 @@
         tg.MainButton.textColor = "#FFFFFF";
         tg.MainButton.color = "#FF2D55";
 
-        // Анимации при скролле
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        // API URL - заменяем на ваш Cloudflare Worker
+        const API_URL = 'https://kittenspaw-bot.savkomax8.workers.dev';
 
-        // Закрытие клавиатуры при клике вне полей ввода
-        document.addEventListener('click', function(e) {
-            if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
-                document.activeElement.blur();
-            }
-        });
-
-        // Скролл для меню
-        document.querySelectorAll('.scroll-link').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.getElementById(this.getAttribute('href').substring(1));
-                if (target) {
-                    window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 60, behavior: "smooth" });
-                }
-            });
-        });
-
-        // --- БАЗА ДАННЫХ И УСЛУГ ---
-        const BOT_DATA = {
-            portfolio: [{
-                category: "Френч и Крейзи",
-                images: ["https://images.unsplash.com/photo-1519014816548-bf5fe059e98b?auto=format&fit=crop&q=80&w=400", "https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&q=80&w=400"]
-            }, {
-                category: "Нюд и минимализм",
-                images: ["https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=400", "https://images.unsplash.com/photo-1516975080661-468ac9ce31c1?auto=format&fit=crop&q=80&w=400"]
-            }],
-            // Важно: durationSlots - это сколько ЧАСОВ (окошек) занимает услуга
-            services: [
-                { id: 'base', name: 'Маникюр + Однотонное', durationSlots: 1, desc: 'Занимает 1 час' },
-                { id: 'build', name: 'Наращивание ногтей', durationSlots: 2, desc: 'Занимает 2 часа' },
-                { id: 'crazy', name: 'Крейзи дизайн / Френч', durationSlots: 2, desc: 'Занимает 2 часа' },
-                { id: 'pedicure', name: 'Педикюр (Smart)', durationSlots: 1, desc: 'Занимает 1 час' }
-            ],
-            bookedSlots: {}, 
-            // Шаг времени теперь каждый 1 час
-            allTimes: ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"]
-        };
-
-        // Рендер портфолио
-        const portfolioContainer = document.getElementById('portfolio-container');
-        BOT_DATA.portfolio.forEach((item, index) => {
-            const imagesHtml = item.images.map(src => `<img src="${src}" class="w-full h-40 object-cover rounded-[16px] shadow-sm">`).join('');
-            portfolioContainer.innerHTML += `
-                <div class="bg-iosCard rounded-[20px] shadow-apple border border-black/5 overflow-hidden">
-                    <button class="w-full px-5 py-4 flex justify-between items-center card-press outline-none" onclick="toggleCategory('cat-${index}', this)">
-                        <span class="text-[17px] font-semibold">${item.category}</span>
-                        <svg class="chevron w-5 h-5 text-iosGray" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="cat-${index}" class="category-content"><div class="category-inner"><div class="px-5 pb-5 grid grid-cols-2 gap-3 pt-1">${imagesHtml}</div></div></div>
-                </div>`;
-        });
-
-        function toggleCategory(id, btnElement) {
-            document.getElementById(id).classList.toggle('open');
-            btnElement.querySelector('.chevron').classList.toggle('open');
-        }
-
-        // --- ЛОГИКА КАЛЕНДАРЯ И ОГРАНИЧЕНИЯ ---
+        // Данные
+        let settings = {};
+        let services = [];
+        let portfolio = [];
+        let timeSlots = [];
+        let daysOff = [];
+        
         let currentDate = new Date();
-        let selectedFullDate = null;
-        let selectedServiceName = null;
-        let selectedDuration = 1;
+        let selectedDate = null;
+        let selectedService = null;
         let selectedTime = null;
 
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         const monthNamesGen = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
 
-        // Ограничения (нельзя в прошлое, максимум 3 месяца вперед)
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        const maxDate = new Date(today);
-        maxDate.setMonth(maxDate.getMonth() + 3);
+        // Загрузка данных
+        async function loadData() {
+            try {
+                const [settingsRes, servicesRes, portfolioRes, scheduleRes, daysOffRes] = await Promise.all([
+                    fetch(`${API_URL}/api/settings`),
+                    fetch(`${API_URL}/api/services`),
+                    fetch(`${API_URL}/api/portfolio`),
+                    fetch(`${API_URL}/api/schedule`),
+                    fetch(`${API_URL}/api/days-off`)
+                ]);
 
+                settings = await settingsRes.json();
+                services = await servicesRes.json();
+                portfolio = await portfolioRes.json();
+                const schedule = await scheduleRes.json();
+                timeSlots = schedule.slots || [];
+                daysOff = await daysOffRes.json();
+
+                // Применяем настройки
+                document.getElementById('studio-name').textContent = settings.studio_name || 'Kittenspaw';
+                document.getElementById('studio-desc').textContent = settings.studio_desc || 'Идеальный маникюр';
+                document.getElementById('address-text').textContent = settings.studio_address || 'Адрес не указан';
+                document.getElementById('map-link').href = settings.studio_map_url || '#';
+                document.getElementById('instagram-link').href = settings.instagram_url || '#';
+
+                // Рендерим
+                renderServices();
+                renderPortfolio();
+                renderCalendar();
+            } catch (e) {
+                console.error('Load error:', e);
+            }
+        }
+
+        // Рендер услуг
+        function renderServices() {
+            const container = document.getElementById('services-container');
+            if (services.length === 0) {
+                container.innerHTML = '<div class="text-center py-4 text-iosGray">Нет услуг</div>';
+                return;
+            }
+            container.innerHTML = services.map(s => `
+                <div class="bg-iosCard rounded-[16px] p-3 shadow-apple flex justify-between items-center">
+                    <div>
+                        <h3 class="text-[15px] font-semibold">${s.name}</h3>
+                        <p class="text-[12px] text-iosGray">${s.description || ''} • ${s.duration_slots}ч</p>
+                    </div>
+                    <span class="text-[15px] font-medium text-iosPink">${s.price} ₽</span>
+                </div>
+            `).join('');
+        }
+
+        // Рендер портфолио
+        function renderPortfolio() {
+            const container = document.getElementById('portfolio-container');
+            if (portfolio.length === 0) {
+                container.innerHTML = '<div class="text-center py-4 text-iosGray">Нет работ</div>';
+                return;
+            }
+            container.innerHTML = portfolio.map((cat, i) => `
+                <div class="bg-iosCard rounded-[18px] shadow-apple overflow-hidden">
+                    <button class="w-full px-4 py-3 flex justify-between items-center card-press" onclick="toggleCategory('cat-${i}')">
+                        <span class="text-[16px] font-semibold">${cat.name}</span>
+                        <svg class="chevron w-5 h-5 text-iosGray" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="cat-${i}" class="category-content">
+                        <div class="px-4 pb-4 grid grid-cols-2 gap-2">
+                            ${cat.images.map(img => `<img src="${img.file_url || 'https://via.placeholder.com/200'}" class="w-full h-32 object-cover rounded-[12px]">`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCategory(id) {
+            document.getElementById(id).classList.toggle('open');
+        }
+
+        // Календарь
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
-            document.getElementById('month-display').innerText = `${monthNames[month]} ${year}`;
+            document.getElementById('month-display').textContent = `${monthNames[month]} ${year}`;
 
-            const prevBtn = document.getElementById('btn-prev-month');
-            const nextBtn = document.getElementById('btn-next-month');
-            
-            if (year === today.getFullYear() && month === today.getMonth()) {
-                prevBtn.classList.add('opacity-30', 'pointer-events-none');
-            } else { prevBtn.classList.remove('opacity-30', 'pointer-events-none'); }
-
-            if (year === maxDate.getFullYear() && month === maxDate.getMonth()) {
-                nextBtn.classList.add('opacity-30', 'pointer-events-none');
-            } else { nextBtn.classList.remove('opacity-30', 'pointer-events-none'); }
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const maxDate = new Date(today);
+            maxDate.setMonth(maxDate.getMonth() + 2);
 
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -412,7 +287,7 @@
 
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
-            for (let i = 0; i < offset; i++) grid.innerHTML += `<div></div>`;
+            for (let i = 0; i < offset; i++) grid.innerHTML += '<div></div>';
 
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateObj = new Date(year, month, day);
@@ -420,25 +295,17 @@
                 
                 const isPast = dateObj < today;
                 const isTooFar = dateObj > maxDate;
-                const isToday = dateObj.getTime() === today.getTime();
-                const isTomorrow = dateObj.getTime() === today.getTime() + 86400000;
-                const isDisabled = isPast || isTooFar;
-                const needsManagerApproval = isToday || isTomorrow;
+                const isDayOff = daysOff.includes(dateStr);
+                const isDisabled = isPast || isTooFar || isDayOff;
 
-                let btnClass = "w-10 h-10 flex items-center justify-center rounded-full text-[16px] transition-all ";
+                let btnClass = "w-9 h-9 flex items-center justify-center rounded-full text-[14px] ";
                 if (isDisabled) {
                     btnClass += "text-black/20 cursor-not-allowed";
-                } else if (needsManagerApproval) {
-                    btnClass += "text-iosPink bg-iosPinkSoft/30 border border-iosPink/20 btn-press cursor-pointer";
                 } else {
-                    btnClass += "text-iosText hover:bg-iosPinkSoft hover:text-iosPink btn-press cursor-pointer";
+                    btnClass += "text-iosText hover:bg-iosPinkSoft btn-press cursor-pointer";
                 }
 
-                grid.innerHTML += `
-                    <button class="${btnClass}" ${isDisabled ? 'disabled' : `onclick="handleDateClick('${dateStr}', ${day}, ${month}, ${needsManagerApproval})"`}>
-                        ${day}
-                    </button>
-                `;
+                grid.innerHTML += `<button class="${btnClass}" ${isDisabled ? 'disabled' : `onclick="goToServices('${dateStr}', ${day}, ${month})"`}>${day}</button>`;
             }
         }
 
@@ -447,227 +314,122 @@
             renderCalendar();
         }
 
-        // --- ОБРАБОТКА КЛИКА ПО ДАТЕ ---
-        function handleDateClick(dateStr, day, month, needsManagerApproval) {
-            if (needsManagerApproval) {
-                // Показываем модальное окно с кнопкой связи с менеджером
-                const modalHtml = `
-                    <div id="manager-modal" class="fixed inset-0 z-[100] flex items-end justify-center bg-black/50" onclick="closeManagerModal()">
-                        <div class="bg-iosCard w-full max-w-md rounded-t-[24px] p-6 pb-10 animate-slide-up" onclick="event.stopPropagation()">
-                            <div class="w-12 h-1 bg-black/20 rounded-full mx-auto mb-6"></div>
-                            <h3 class="text-[20px] font-bold text-iosText mb-2">Запись на ${day} ${monthNamesGen[month]}</h3>
-                            <p class="text-[15px] text-iosGray mb-6">К сожалению, на этот день запись возможна только по договорённости с менеджером. Напишите нам, и мы подберём удобное время!</p>
-                            <button onclick="goToManagerFromModal()" class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press mb-3">
-                                Связаться с менеджером
-                            </button>
-                            <button onclick="closeManagerModal()" class="w-full bg-black/5 text-iosText py-4 rounded-[20px] text-[17px] font-medium btn-press">
-                                Отмена
-                            </button>
-                        </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-            } else {
-                goToServices(dateStr, day, month);
-            }
-        }
-
-        function closeManagerModal() {
-            const modal = document.getElementById('manager-modal');
-            if (modal) modal.remove();
-        }
-
-        function goToManagerFromModal() {
-            closeManagerModal();
-            document.getElementById('manager').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => {
-                document.getElementById('manager-message').focus();
-            }, 500);
-        }
-
-        // --- НАВИГАЦИЯ ШАГОВ ---
         function goToServices(dateStr, day, month) {
-            selectedFullDate = dateStr;
+            selectedDate = dateStr;
             selectedTime = null;
-            selectedServiceName = null;
             tg.MainButton.hide();
 
-            document.getElementById('selected-date-display-svc').innerText = `${day} ${monthNamesGen[month]}`;
-            renderServices();
+            document.getElementById('selected-date').textContent = `${day} ${monthNamesGen[month]}`;
+            
+            const grid = document.getElementById('services-grid');
+            grid.innerHTML = services.map(s => `
+                <button onclick="goToTimes('${s.name}', ${s.duration_slots})" class="w-full text-left p-3 rounded-[16px] border border-black/5 bg-iosCard btn-press">
+                    <h4 class="text-[15px] font-semibold">${s.name}</h4>
+                    <p class="text-[12px] text-iosGray">${s.duration_slots}ч • ${s.price} ₽</p>
+                </button>
+            `).join('');
 
-            // Сначала скрываем старый view, потом показываем новый
             document.getElementById('view-dates').className = "nav-view view-left";
-            setTimeout(() => {
-                document.getElementById('view-services').className = "nav-view view-center";
-            }, 50);
+            document.getElementById('view-services').className = "nav-view view-center";
         }
 
         function backToDates() {
-            selectedFullDate = null;
+            selectedDate = null;
             tg.MainButton.hide();
+            document.getElementById('view-dates').className = "nav-view view-center";
             document.getElementById('view-services').className = "nav-view view-right";
-            setTimeout(() => {
-                document.getElementById('view-dates').className = "nav-view view-center";
-            }, 50);
-        }
-
-        function renderServices() {
-            const grid = document.getElementById('services-grid');
-            grid.innerHTML = '';
-            BOT_DATA.services.forEach(svc => {
-                grid.innerHTML += `
-                    <button onclick="goToTimes('${svc.name}', ${svc.durationSlots})" class="w-full text-left p-4 rounded-[20px] border border-black/5 bg-iosCard shadow-sm transition-all flex justify-between items-center">
-                        <div>
-                            <h4 class="text-[17px] font-semibold text-iosText">${svc.name}</h4>
-                            <p class="text-[13px] text-iosGray mt-1">${svc.desc}</p>
-                        </div>
-                        <div class="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center text-iosGray">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </div>
-                    </button>
-                `;
-            });
         }
 
         function goToTimes(serviceName, duration) {
-            selectedServiceName = serviceName;
-            selectedDuration = duration;
+            selectedService = serviceName;
             selectedTime = null;
             tg.MainButton.hide();
 
-            document.getElementById('selected-service-display').innerText = serviceName;
-            renderTimeSlots(selectedFullDate);
+            document.getElementById('selected-service').textContent = serviceName;
+            
+            const grid = document.getElementById('times-grid');
+            grid.innerHTML = timeSlots.map(slot => `
+                <button onclick="selectTime('${slot.time}', ${duration})" class="py-2 rounded-[12px] text-[14px] bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10">
+                    ${slot.time}
+                </button>
+            `).join('');
 
             document.getElementById('view-services').className = "nav-view view-left";
-            setTimeout(() => {
-                document.getElementById('view-times').className = "nav-view view-center";
-            }, 50);
+            document.getElementById('view-times').className = "nav-view view-center";
         }
 
         function backToServices() {
             selectedTime = null;
             tg.MainButton.hide();
             document.getElementById('view-times').className = "nav-view view-right";
-            setTimeout(() => {
-                document.getElementById('view-services').className = "nav-view view-center";
-            }, 50);
+            document.getElementById('view-services').className = "nav-view view-center";
         }
 
-        function renderTimeSlots(dateStr) {
-            const grid = document.getElementById('times-grid');
-            grid.innerHTML = '';
-            
-            // В реальном проекте сюда бот передает занятые часы (например: ["11:00", "12:00", "15:00"])
-            const booked = BOT_DATA.bookedSlots[dateStr] || [];
-            
-            // Если массив пустой, сделаем случайную занятость для визуального теста
-            let demoBooked = booked;
-            if (booked.length === 0) {
-                const dayNum = parseInt(dateStr.split('-')[2]);
-                // Для четных дней пусть будет занято 11:00 и 15:00. Для нечетных 12:00 и 13:00.
-                demoBooked = dayNum % 2 === 0 ? ["11:00", "15:00"] : ["12:00", "13:00"]; 
-            }
-
-            BOT_DATA.allTimes.forEach((time, index) => {
-                let isBooked = demoBooked.includes(time);
-                
-                // ЛОГИКА 2-Х ОКОН:
-                // Если услуга длится больше 1 часа, мы проверяем СЛЕДУЮЩИЕ часы.
-                if (!isBooked && selectedDuration > 1) {
-                    for (let i = 1; i < selectedDuration; i++) {
-                        // Если следующего окошка нет в массиве (например, уже 20:00, а надо еще час)
-                        // ИЛИ если следующий час занят кем-то другим
-                        if (index + i >= BOT_DATA.allTimes.length || demoBooked.includes(BOT_DATA.allTimes[index + i])) {
-                            isBooked = true; // Делаем ТЕКУЩЕЕ время недоступным
-                            break;
-                        }
-                    }
-                }
-
-                let btnClass = "py-3 rounded-[16px] text-[16px] font-medium transition-all ";
-                if (isBooked) {
-                    btnClass += "bg-black/5 text-black/30 cursor-not-allowed";
-                } else {
-                    btnClass += "bg-iosPinkSoft/40 text-iosPink btn-press cursor-pointer border border-iosPink/10 hover:bg-iosPinkSoft";
-                }
-
-                grid.innerHTML += `
-                    <button id="time-${time.replace(':','')}" class="${btnClass}" ${isBooked ? 'disabled' : `onclick="selectTime('${time}')"`}>
-                        ${time}
-                    </button>
-                `;
+        function selectTime(time, duration) {
+            document.querySelectorAll('#times-grid button').forEach(b => {
+                b.className = "py-2 rounded-[12px] text-[14px] bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10";
             });
-        }
-
-        function selectTime(time) {
-            BOT_DATA.allTimes.forEach(t => {
-                const el = document.getElementById(`time-${t.replace(':','')}`);
-                if (el && !el.hasAttribute('disabled')) {
-                    el.className = "py-3 rounded-[16px] text-[16px] font-medium transition-all bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10 hover:bg-iosPinkSoft";
-                }
-            });
-
-            const selectedEl = document.getElementById(`time-${time.replace(':','')}`);
-            selectedEl.className = "py-3 rounded-[16px] text-[16px] font-bold transition-all bg-iosPink text-white shadow-apple-btn scale-105";
-
+            event.target.className = "py-2 rounded-[12px] text-[14px] bg-iosPink text-white font-bold btn-press shadow-apple-btn";
+            
             selectedTime = time;
-            tg.MainButton.setText(`ПОДТВЕРДИТЬ: ${time}`);
+            tg.MainButton.setText(`ЗАПИСАТЬСЯ: ${time}`);
             tg.MainButton.show();
         }
 
-        renderCalendar();
-
-        // --- ОТПРАВКА ---
+        // Отправка записи
         tg.MainButton.onClick(() => {
-            const userData = tg.initDataUnsafe?.user || {};
-            
-            // Передаем боту всё, что нужно
+            const user = tg.initDataUnsafe?.user || {};
             const payload = {
-                action: "book_appointment",
-                date: selectedFullDate,
-                service: selectedServiceName,
-                duration: selectedDuration, // ВАЖНО: Бот узнает, сколько окон надо заблокировать
+                user_id: user.id,
+                client_name: user.first_name || 'Клиент',
+                service: selectedService,
+                date: selectedDate,
                 time: selectedTime,
-                client: {
-                    id: userData.id,
-                    username: userData.username ? `@${userData.username}` : '',
-                    name: userData.first_name || 'Клиент'
-                }
+                duration: selectedService ? services.find(s => s.name === selectedService)?.duration_slots || 1 : 1
             };
 
-            // ИНСТРУКЦИЯ ДЛЯ БЭКЕНДА:
-            // Если duration = 2, а time = "10:00", 
-            // бот должен сохранить в свою базу занятыми И "10:00", И "11:00" на эту дату!
-
-            tg.sendData(JSON.stringify(payload));
+            fetch(`${API_URL}/api/book`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(r => r.json()).then(data => {
+                if (data.ok) {
+                    tg.showAlert('✅ Вы записаны!');
+                    tg.MainButton.hide();
+                    backToDates();
+                } else {
+                    tg.showAlert('❌ Ошибка: ' + (data.error || 'Неизвестная'));
+                }
+            });
         });
 
-        // --- ОТПРАВКА СООБЩЕНИЯ МЕНЕДЖЕРУ ---
+        // Отправка сообщения
         function sendToManager() {
-            const messageInput = document.getElementById('manager-message');
-            const message = messageInput.value.trim();
-            
+            const message = document.getElementById('manager-message').value.trim();
             if (!message) {
-                tg.showAlert('Пожалуйста, введите сообщение');
+                tg.showAlert('Введите сообщение');
                 return;
             }
 
-            const userData = tg.initDataUnsafe?.user || {};
-            
-            const payload = {
-                action: "contact_manager",
-                message: message,
-                client: {
-                    id: userData.id,
-                    username: userData.username ? `@${userData.username}` : '',
-                    name: userData.first_name || 'Клиент'
+            const user = tg.initDataUnsafe?.user || {};
+            fetch(`${API_URL}/api/contact`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    client_name: user.first_name || 'Клиент',
+                    message
+                })
+            }).then(r => r.json()).then(data => {
+                if (data.ok) {
+                    tg.showAlert('✅ Отправлено!');
+                    document.getElementById('manager-message').value = '';
                 }
-            };
-
-            tg.sendData(JSON.stringify(payload));
-            messageInput.value = '';
-            messageInput.blur();
+            });
         }
+
+        // Запуск
+        loadData();
     </script>
 </body>
 </html>
