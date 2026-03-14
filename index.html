@@ -236,14 +236,11 @@
         <div class="bg-iosCard rounded-[24px] overflow-hidden shadow-apple mb-4">
             <iframe id="map-frame" src="" class="w-full h-[300px]" frameborder="0" allowfullscreen></iframe>
         </div>
-        <div class="bg-iosCard rounded-[24px] overflow-hidden shadow-apple mb-4">
+        <div class="bg-iosCard rounded-[24px] overflow-hidden shadow-apple">
             <video id="video-route" class="w-full" controls playsinline>
                 <source src="" type="video/mp4">
                 Ваш браузер не поддерживает видео.
             </video>
-        </div>
-        <div class="bg-iosCard rounded-[24px] overflow-hidden shadow-apple">
-            <img id="photo-route" src="" alt="Маршрут" class="w-full h-auto" style="display: none;">
         </div>
     </section>
 
@@ -349,15 +346,6 @@
                     videoEl.style.display = 'block';
                 } else {
                     videoEl.style.display = 'none';
-                }
-
-                // Фото маршрута
-                const photoEl = document.getElementById('photo-route');
-                if (settings.studio_photo_url) {
-                    photoEl.src = settings.studio_photo_url;
-                    photoEl.style.display = 'block';
-                } else {
-                    photoEl.style.display = 'none';
                 }
 
                 // Генерируем слоты времени из work_start и work_end если нет готовых
