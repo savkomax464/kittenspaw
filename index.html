@@ -98,13 +98,11 @@
         }
         
         .category-content {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.3s ease;
+            display: none;
         }
         
         .category-content.open {
-            grid-template-rows: 1fr;
+            display: block;
         }
         
         @keyframes slide-up {
@@ -424,7 +422,7 @@
                         <svg class="chevron w-5 h-5 text-iosGray" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div id="cat-${i}" class="category-content">
-                        <div class="px-5 pb-5 grid grid-cols-2 gap-3 pt-1">
+                        <div class="grid grid-cols-2 gap-3 px-5 pb-5 pt-1">
                             ${cat.images.map(img => `<img src="${img.file_url || 'https://via.placeholder.com/200'}" class="w-full h-40 object-cover rounded-[16px] shadow-sm">`).join('')}
                         </div>
                     </div>
