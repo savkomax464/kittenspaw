@@ -98,11 +98,13 @@
         }
         
         .category-content {
-            display: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
         }
         
         .category-content.open {
-            display: block;
+            max-height: 2000px;
         }
         
         @keyframes slide-up {
@@ -431,7 +433,10 @@
         }
 
         function toggleCategory(id) {
-            document.getElementById(id).classList.toggle('open');
+            const content = document.getElementById(id);
+            const chevron = content.parentElement.querySelector('.chevron');
+            content.classList.toggle('open');
+            chevron.classList.toggle('open');
         }
 
         // Календарь
