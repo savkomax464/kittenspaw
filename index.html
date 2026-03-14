@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -27,37 +28,100 @@
         }
     </script>
     <style>
-        html { scroll-behavior: smooth; }
-        body { -webkit-tap-highlight-color: transparent; background-color: #FCF8F9; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #FCF8F9;
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        
         .apple-glass {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
         }
-        .btn-press:active { transform: scale(0.96); }
-        .card-press:active { transform: scale(0.98); background-color: #F9F9F9; }
-        .nav-view { transition: transform 0.3s ease, opacity 0.3s ease; }
-        .view-left { transform: translateX(-100%); position: absolute; top: 0; opacity: 0; pointer-events: none; }
-        .view-center { transform: translateX(0); position: relative; opacity: 1; }
-        .view-right { transform: translateX(100%); position: absolute; top: 0; opacity: 0; pointer-events: none; }
-        .nav-container { position: relative; overflow: hidden; width: 100%; }
-        .chevron { transition: transform 0.3s; }
-        .chevron.open { transform: rotate(180deg); }
+        
+        .btn-press:active {
+            transform: scale(0.96);
+        }
+        
+        .card-press:active {
+            transform: scale(0.98);
+            background-color: #F9F9F9;
+        }
+        
+        .nav-view {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .view-left {
+            transform: translateX(-100%);
+            position: absolute;
+            top: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .view-center {
+            transform: translateX(0);
+            position: relative;
+            opacity: 1;
+        }
+        
+        .view-right {
+            transform: translateX(100%);
+            position: absolute;
+            top: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .nav-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .chevron {
+            transition: transform 0.3s;
+        }
+        
+        .chevron.open {
+            transform: rotate(180deg);
+        }
+        
         .category-content {
             display: grid;
             grid-template-rows: 0fr;
             transition: grid-template-rows 0.3s ease;
         }
-        .category-content.open { grid-template-rows: 1fr; }
-        @keyframes slide-up {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        
+        .category-content.open {
+            grid-template-rows: 1fr;
         }
-        .animate-slide-up { animation: slide-up 0.3s ease; }
+        
+        @keyframes slide-up {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-slide-up {
+            animation: slide-up 0.3s ease;
+        }
     </style>
 </head>
+
 <body class="text-iosText antialiased pb-32">
 
     <!-- Навигация -->
@@ -119,7 +183,7 @@
     <section id="booking" class="px-4 py-4">
         <h2 class="text-[20px] font-bold mb-3 px-2">Выбор времени</h2>
         <div class="bg-iosCard rounded-[24px] p-5 shadow-apple nav-container min-h-[420px]">
-            
+
             <!-- Шаг 1: Дата -->
             <div id="view-dates" class="nav-view view-center">
                 <div class="flex justify-between items-center mb-4">
@@ -130,7 +194,13 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-7 gap-1 text-center text-[11px] text-iosGray mb-2">
-                    <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div class="text-iosPink">Сб</div><div class="text-iosPink">Вс</div>
+                    <div>Пн</div>
+                    <div>Вт</div>
+                    <div>Ср</div>
+                    <div>Чт</div>
+                    <div>Пт</div>
+                    <div class="text-iosPink">Сб</div>
+                    <div class="text-iosPink">Вс</div>
                 </div>
                 <div id="calendar-grid" class="grid grid-cols-7 gap-1 justify-items-center"></div>
             </div>
@@ -182,17 +252,9 @@
         <div class="bg-iosCard rounded-[24px] p-5 shadow-apple">
             <p class="text-[15px] text-iosGray mb-4 px-1">Опишите ваш вопрос, и мы свяжемся с вами в ближайшее время</p>
             <div class="flex flex-col gap-3">
-                <textarea 
-                    id="manager-message" 
-                    rows="4" 
-                    placeholder="Введите ваше сообщение..." 
-                    class="w-full p-4 rounded-[20px] border border-iosPink/10 bg-black/5 text-iosText text-[15px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 resize-none caret-iosText"
-                    style="caret-color: #1D1D1F;"
-                ></textarea>
-                <button 
-                    onclick="sendToManager()" 
-                    class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press"
-                >
+                <textarea id="manager-message" rows="4" placeholder="Введите ваше сообщение..." class="w-full p-4 rounded-[20px] border border-iosPink/10 bg-black/5 text-iosText text-[15px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 resize-none caret-iosText"
+                    style="caret-color: #1D1D1F;"></textarea>
+                <button onclick="sendToManager()" class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press">
                     Отправить
                 </button>
             </div>
@@ -227,7 +289,7 @@
         let timeSlots = [];
         let daysOff = [];
         let bookedSlots = {};
-        
+
         let currentDate = new Date();
         let selectedDate = null;
         let selectedService = null;
@@ -276,7 +338,9 @@
                     const slots = [];
                     for (let h = startH; h <= endH; h++) {
                         const time = `${String(h).padStart(2,'0')}:${startM||'00'}`;
-                        slots.push({ time });
+                        slots.push({
+                            time
+                        });
                     }
                     timeSlots = slots;
                 }
@@ -295,8 +359,12 @@
             try {
                 const res = await fetch(`${API_URL}/api/booked`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ date: dateStr })
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        date: dateStr
+                    })
                 });
                 const booked = await res.json();
                 bookedSlots[dateStr] = booked;
@@ -552,21 +620,81 @@
             document.querySelectorAll('#times-grid button:not([disabled])').forEach(b => {
                 b.className = "py-3 rounded-[16px] text-[16px] font-medium transition-all bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10 hover:bg-iosPinkSoft";
             });
-            
+
             // Выделяем выбранную кнопку
             event.target.className = "py-3 rounded-[16px] text-[16px] font-bold transition-all bg-iosPink text-white shadow-apple-btn scale-105";
-            
+
             selectedTime = time;
-            tg.MainButton.setText(`ПОДТВЕРДИТЬ: ${time}`);
-            tg.MainButton.show();
+            showPhoneModal();
         }
 
-        // Отправка записи
-        tg.MainButton.onClick(() => {
+        // Модальное окно ввода телефона
+        function showPhoneModal() {
+            const modalHtml = `
+                <div id="phone-modal" class="fixed inset-0 z-[100] flex items-end justify-center bg-black/50" onclick="closePhoneModal()">
+                    <div class="bg-iosCard w-full max-w-md rounded-t-[24px] p-6 pb-10 animate-slide-up" onclick="event.stopPropagation()">
+                        <div class="w-12 h-1 bg-black/20 rounded-full mx-auto mb-6"></div>
+                        <h3 class="text-[20px] font-bold text-iosText mb-2">Введите номер телефона</h3>
+                        <p class="text-[15px] text-iosGray mb-6 leading-relaxed">Мы свяжемся с вами для подтверждения записи</p>
+                        <input 
+                            type="tel" 
+                            id="phone-input" 
+                            placeholder="+7 (999) 000-00-00"
+                            class="w-full p-4 rounded-[20px] border border-iosPink/10 bg-black/5 text-iosText text-[17px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 mb-4"
+                            oninput="formatPhone(this)"
+                        />
+                        <button
+                            onclick="confirmBooking()"
+                            class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press"
+                        >
+                            Подтвердить
+                        </button>
+                        <button
+                            onclick="closePhoneModal()"
+                            class="w-full bg-black/5 text-iosText py-4 rounded-[20px] text-[17px] font-medium mt-3 btn-press"
+                        >
+                            Отмена
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            setTimeout(() => document.getElementById('phone-input').focus(), 100);
+        }
+
+        function closePhoneModal() {
+            const modal = document.getElementById('phone-modal');
+            if (modal) modal.remove();
+        }
+
+        function formatPhone(input) {
+            let phone = input.value.replace(/\D/g, '');
+            if (phone.startsWith('7')) phone = phone.substring(1);
+            if (phone.length > 10) phone = phone.substring(0, 10);
+            
+            let formatted = '+7';
+            if (phone.length > 0) formatted += ' (' + phone.substring(0, 3);
+            if (phone.length >= 3) formatted += ') ' + phone.substring(3, 6);
+            if (phone.length >= 6) formatted += '-' + phone.substring(6, 8);
+            if (phone.length >= 8) formatted += '-' + phone.substring(8, 10);
+            
+            input.value = formatted;
+        }
+
+        function confirmBooking() {
+            const phoneInput = document.getElementById('phone-input');
+            const phone = phoneInput.value.replace(/\D/g, '');
+            
+            if (phone.length < 10) {
+                tg.showAlert('Пожалуйста, введите корректный номер телефона');
+                return;
+            }
+
             const user = tg.initDataUnsafe?.user || {};
             const payload = {
                 user_id: user.id,
                 client_name: user.first_name || 'Клиент',
+                phone: '+' + phone,
                 service: selectedService,
                 date: selectedDate,
                 time: selectedTime,
@@ -580,13 +708,14 @@
             }).then(r => r.json()).then(data => {
                 if (data.ok) {
                     tg.showAlert('✅ Вы записаны!');
+                    closePhoneModal();
                     tg.MainButton.hide();
                     backToDates();
                 } else {
                     tg.showAlert('❌ Ошибка: ' + (data.error || 'Неизвестная'));
                 }
             });
-        });
+        }
 
         // Отправка сообщения
         function sendToManager() {
@@ -618,4 +747,5 @@
         loadData();
     </script>
 </body>
+
 </html>
