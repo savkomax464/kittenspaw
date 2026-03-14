@@ -519,7 +519,7 @@
 
         function goToManagerFromModal() {
             closeManagerModal();
-            document.getElementById('manager').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('manager').scrollIntoView({ behavior: 'smooth', block: 'start' });
             setTimeout(() => {
                 document.getElementById('manager-message').focus();
             }, 500);
