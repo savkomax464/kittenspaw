@@ -777,15 +777,23 @@
             const phoneInput = document.getElementById('manager-phone');
             const message = document.getElementById('manager-message').value.trim();
             const phone = phoneInput.value.replace(/\D/g, '');
-            
+
             if (phone.length < 12) {
-                tg.showAlert('Пожалуйста, введите корректный номер телефона');
+                if (typeof tg !== 'undefined') {
+                    tg.showAlert('Пожалуйста, введите корректный номер телефона');
+                } else {
+                    alert('Пожалуйста, введите корректный номер телефона');
+                }
                 phoneInput.focus();
                 return;
             }
-            
+
             if (!message) {
-                tg.showAlert('Пожалуйста, введите сообщение');
+                if (typeof tg !== 'undefined') {
+                    tg.showAlert('Пожалуйста, введите сообщение');
+                } else {
+                    alert('Пожалуйста, введите сообщение');
+                }
                 return;
             }
 
@@ -801,11 +809,28 @@
                 })
             }).then(r => r.json()).then(data => {
                 if (data.ok) {
-                    tg.showAlert('✅ Отправлено!');
+                    if (typeof tg !== 'undefined') {
+                        tg.showAlert('✅ Отправлено!');
+                    } else {
+                        alert('✅ Отправлено!');
+                    }
                     document.getElementById('manager-message').value = '';
                     document.getElementById('manager-phone').value = '';
                     document.getElementById('manager-message').blur();
                     document.getElementById('manager-phone').blur();
+                } else {
+                    if (typeof tg !== 'undefined') {
+                        tg.showAlert('❌ Ошибка: ' + (data.error || 'Неизвестная'));
+                    } else {
+                        alert('❌ Ошибка: ' + (data.error || 'Неизвестная'));
+                    }
+                }
+            }).catch(e => {
+                console.error('Send message error:', e);
+                if (typeof tg !== 'undefined') {
+                    tg.showAlert('❌ Ошибка отправки: ' + e.message);
+                } else {
+                    alert('❌ Ошибка отправки: ' + e.message);
                 }
             });
         }
