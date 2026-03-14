@@ -519,10 +519,21 @@
 
         function goToManagerFromModal() {
             closeManagerModal();
-            document.getElementById('manager').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const managerSection = document.getElementById('manager');
+            const offset = 100; // Отступ сверху
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = managerSection.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+
             setTimeout(() => {
                 document.getElementById('manager-message').focus();
-            }, 500);
+            }, 600);
         }
 
         function goToServices(dateStr, day, month) {
