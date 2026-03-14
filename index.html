@@ -259,6 +259,8 @@
         <div class="bg-iosCard rounded-[24px] p-5 shadow-apple">
             <p class="text-[15px] text-iosGray mb-4 px-1">Опишите ваш вопрос, и мы свяжемся с вами в ближайшее время</p>
             <div class="flex flex-col gap-3">
+                <input type="tel" id="manager-phone" placeholder="+375 (29) 123-45-67" class="w-full p-4 rounded-[20px] border border-iosPink/10 bg-black/5 text-iosText text-[17px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 caret-iosText" oninput="formatManagerPhone(this)"
+                />
                 <textarea id="manager-message" rows="4" placeholder="Введите ваше сообщение..." class="w-full p-4 rounded-[20px] border border-iosPink/10 bg-black/5 text-iosText text-[15px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 resize-none caret-iosText"
                     style="caret-color: #1D1D1F;"></textarea>
                 <button onclick="sendToManager()" class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press">
@@ -754,9 +756,34 @@
             });
         }
 
+        // Форматирование телефона для менеджера
+        function formatManagerPhone(input) {
+            let phone = input.value.replace(/\D/g, '');
+            if (phone.startsWith('375')) phone = phone.substring(3);
+            if (phone.startsWith('8')) phone = phone.substring(1);
+            if (phone.length > 9) phone = phone.substring(0, 9);
+            
+            let formatted = '+375';
+            if (phone.length > 0) formatted += ' (' + phone.substring(0, 2);
+            if (phone.length >= 2) formatted += ') ' + phone.substring(2, 5);
+            if (phone.length >= 5) formatted += '-' + phone.substring(5, 7);
+            if (phone.length >= 7) formatted += '-' + phone.substring(7, 9);
+            
+            input.value = formatted;
+        }
+
         // Отправка сообщения
         function sendToManager() {
+            const phoneInput = document.getElementById('manager-phone');
             const message = document.getElementById('manager-message').value.trim();
+            const phone = phoneInput.value.replace(/\D/g, '');
+            
+            if (phone.length < 12) {
+                tg.showAlert('Пожалуйста, введите корректный номер телефона');
+                phoneInput.focus();
+                return;
+            }
+            
             if (!message) {
                 tg.showAlert('Пожалуйста, введите сообщение');
                 return;
@@ -769,13 +796,16 @@
                 body: JSON.stringify({
                     user_id: user.id,
                     client_name: user.first_name || 'Клиент',
+                    phone: '+' + phone,
                     message
                 })
             }).then(r => r.json()).then(data => {
                 if (data.ok) {
                     tg.showAlert('✅ Отправлено!');
                     document.getElementById('manager-message').value = '';
+                    document.getElementById('manager-phone').value = '';
                     document.getElementById('manager-message').blur();
+                    document.getElementById('manager-phone').blur();
                 }
             });
         }
