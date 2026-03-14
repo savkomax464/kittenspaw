@@ -548,9 +548,12 @@
         }
 
         function selectTime(time, duration) {
-            document.querySelectorAll('#times-grid button').forEach(b => {
+            // Сбрасываем только активные кнопки (не disabled)
+            document.querySelectorAll('#times-grid button:not([disabled])').forEach(b => {
                 b.className = "py-3 rounded-[16px] text-[16px] font-medium transition-all bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10 hover:bg-iosPinkSoft";
             });
+            
+            // Выделяем выбранную кнопку
             event.target.className = "py-3 rounded-[16px] text-[16px] font-bold transition-all bg-iosPink text-white shadow-apple-btn scale-105";
             
             selectedTime = time;
