@@ -226,6 +226,7 @@
         let portfolio = [];
         let timeSlots = [];
         let daysOff = [];
+        let bookedSlots = {};
         
         let currentDate = new Date();
         let selectedDate = null;
@@ -286,6 +287,23 @@
                 renderCalendar();
             } catch (e) {
                 console.error('Load error:', e);
+            }
+        }
+
+        // Загрузка занятых слотов для даты
+        async function loadBookedSlots(dateStr) {
+            try {
+                const res = await fetch(`${API_URL}/api/booked`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: dateStr })
+                });
+                const booked = await res.json();
+                bookedSlots[dateStr] = booked;
+                return booked;
+            } catch (e) {
+                console.error('Load booked error:', e);
+                return [];
             }
         }
 
@@ -454,19 +472,65 @@
             }, 50);
         }
 
-        function goToTimes(serviceName, duration) {
+        async function goToTimes(serviceName, duration) {
             selectedService = serviceName;
             selectedTime = null;
             tg.MainButton.hide();
 
             document.getElementById('selected-service').textContent = serviceName;
             
+            // Загружаем занятые слоты
+            const booked = await loadBookedSlots(selectedDate);
+            
             const grid = document.getElementById('times-grid');
-            grid.innerHTML = timeSlots.map(slot => `
-                <button onclick="selectTime('${slot.time}', ${duration})" class="py-3 rounded-[16px] text-[16px] font-medium transition-all bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10 hover:bg-iosPinkSoft">
-                    ${slot.time}
-                </button>
-            `).join('');
+            grid.innerHTML = '';
+            
+            // Создаём множество занятых времён для быстрой проверки
+            const bookedTimes = new Set(booked.map(b => b.time));
+            
+            for (const slot of timeSlots) {
+                const [slotH, slotM] = slot.time.split(':').map(Number);
+                let isBooked = false;
+                let bookedService = null;
+                
+                // Проверяем каждый слот услуги
+                for (let i = 0; i < duration; i++) {
+                    const checkHour = slotH + i;
+                    const checkTime = `${String(checkHour).padStart(2,'0')}:${String(slotM).padStart(2,'0')}`;
+                    
+                    // Если вышли за пределы рабочего дня
+                    if (checkHour > parseInt(timeSlots[timeSlots.length-1].time.split(':')[0])) {
+                        isBooked = true;
+                        break;
+                    }
+                    
+                    // Если слот занят
+                    if (bookedTimes.has(checkTime)) {
+                        isBooked = true;
+                        const b = booked.find(b => b.time === checkTime);
+                        if (b && b.isStart) bookedService = b.service;
+                        break;
+                    }
+                }
+                
+                let btnClass = "py-3 rounded-[16px] text-[16px] font-medium transition-all ";
+                if (isBooked) {
+                    btnClass += "bg-black/5 text-black/30 cursor-not-allowed";
+                } else {
+                    btnClass += "bg-iosPinkSoft/40 text-iosPink btn-press cursor-pointer border border-iosPink/10 hover:bg-iosPinkSoft";
+                }
+                
+                const btn = document.createElement('button');
+                btn.className = btnClass;
+                btn.textContent = slot.time;
+                if (!isBooked) {
+                    btn.onclick = () => selectTime(slot.time, duration);
+                } else {
+                    btn.disabled = true;
+                    btn.title = bookedService ? `Занято: ${bookedService}` : 'Занято';
+                }
+                grid.appendChild(btn);
+            }
 
             document.getElementById('view-services').className = "nav-view view-left";
             setTimeout(() => {
