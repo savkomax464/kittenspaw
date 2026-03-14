@@ -37,7 +37,7 @@
             border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
         }
         .btn-press:active { transform: scale(0.96); }
-        .card-press:active { transform: scale(0.98); }
+        .card-press:active { transform: scale(0.98); background-color: #F9F9F9; }
         .nav-view { transition: transform 0.3s ease, opacity 0.3s ease; }
         .view-left { transform: translateX(-100%); position: absolute; top: 0; opacity: 0; pointer-events: none; }
         .view-center { transform: translateX(0); position: relative; opacity: 1; }
@@ -64,7 +64,6 @@
     <nav class="sticky top-0 z-50 apple-glass">
         <div class="px-4 py-3 flex justify-between items-center overflow-x-auto hide-scrollbar">
             <div class="flex space-x-4 text-[14px] font-medium text-iosGray">
-                <a href="#about" class="hover:text-iosPink transition whitespace-nowrap">Обо мне</a>
                 <a href="#services" class="hover:text-iosPink transition whitespace-nowrap">Услуги</a>
                 <a href="#portfolio" class="hover:text-iosPink transition whitespace-nowrap">Работы</a>
                 <a href="#booking" class="hover:text-iosPink transition whitespace-nowrap">Запись</a>
@@ -73,11 +72,20 @@
         </div>
     </nav>
 
+    <!-- Главный экран с аватаркой -->
+    <header class="flex flex-col items-center justify-center text-center px-6 pt-12 pb-6">
+        <div class="w-32 h-32 mb-4 rounded-full overflow-hidden shadow-apple border-2 border-iosPinkSoft">
+            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400" alt="Мастер" class="w-full h-full object-cover" id="master-photo">
+        </div>
+        <h1 class="text-[32px] font-bold mb-2" id="studio-name">Kittenspaw</h1>
+        <p class="text-[15px] text-iosGray max-w-[280px]" id="studio-desc">Идеальный маникюр. Безопасность. Носка до 4-х недель.</p>
+    </header>
+
     <!-- Обо мне -->
-    <section id="about" class="px-4 py-6">
+    <section class="px-4 py-4">
         <h2 class="text-[20px] font-bold mb-3 px-2">Почему мы?</h2>
-        <div class="bg-iosCard rounded-[20px] p-5 shadow-apple">
-            <p class="text-[15px] text-iosGray mb-4">Наш приоритет — здоровье ваших ногтей и идеальный блик, который собирает комплименты.</p>
+        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple">
+            <p class="text-[15px] text-iosGray mb-4 leading-relaxed">Наш приоритет — здоровье ваших ногтей и идеальный блик, который собирает комплименты.</p>
             <div class="space-y-3">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-iosPinkSoft flex items-center justify-center text-iosPink">✦</div>
@@ -91,14 +99,22 @@
         </div>
     </section>
 
-    <!-- Заголовок -->
-    <header class="flex flex-col items-center justify-center text-center px-6 pt-8 pb-6">
-        <div class="w-28 h-28 mb-4 rounded-full overflow-hidden shadow-apple border-2 border-iosPinkSoft">
-            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400" alt="Мастер" class="w-full h-full object-cover" id="master-photo">
+    <!-- Карта -->
+    <section class="px-4 py-4">
+        <h2 class="text-[20px] font-bold mb-3 px-2">Как добраться</h2>
+        <div class="bg-iosCard rounded-[24px] overflow-hidden shadow-apple">
+            <iframe id="map-frame" src="" class="w-full h-[300px]" frameborder="0" allowfullscreen></iframe>
         </div>
-        <h1 class="text-[28px] font-bold mb-2" id="studio-name">Kittenspaw</h1>
-        <p class="text-[15px] text-iosGray" id="studio-desc">Идеальный маникюр. Безопасность. Носка до 4-х недель.</p>
-    </header>
+    </section>
+
+    <!-- Адрес -->
+    <section class="px-4 py-4">
+        <h2 class="text-[20px] font-bold mb-3 px-2">Адрес</h2>
+        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple">
+            <p class="text-[15px] text-iosGray leading-relaxed" id="address-text">Загрузка...</p>
+            <a id="map-link" href="#" target="_blank" class="inline-block mt-4 text-iosPink font-medium text-[15px]">🗺 Показать на карте →</a>
+        </div>
+    </section>
 
     <!-- Услуги (динамические) -->
     <section id="services" class="px-4 py-4">
@@ -116,35 +132,18 @@
         </div>
     </section>
 
-    <!-- Карта -->
-    <section class="px-4 py-4">
-        <h2 class="text-[20px] font-bold mb-3 px-2">Карта</h2>
-        <div class="bg-iosCard rounded-[20px] overflow-hidden shadow-apple">
-            <iframe id="map-frame" src="" class="w-full h-[300px]" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </section>
-
-    <!-- Адрес (динамический) -->
-    <section class="px-4 py-4">
-        <h2 class="text-[20px] font-bold mb-3 px-2">Адрес</h2>
-        <div class="bg-iosCard rounded-[20px] p-4 shadow-apple">
-            <p class="text-[15px] text-iosGray" id="address-text">Загрузка...</p>
-            <a id="map-link" href="#" target="_blank" class="inline-block mt-3 text-iosPink font-medium">🗺 Показать на карте</a>
-        </div>
-    </section>
-
     <!-- Запись -->
     <section id="booking" class="px-4 py-4">
         <h2 class="text-[20px] font-bold mb-3 px-2">Выбор времени</h2>
-        <div class="bg-iosCard rounded-[20px] p-4 shadow-apple nav-container min-h-[400px]">
+        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple nav-container min-h-[420px]">
             
             <!-- Шаг 1: Дата -->
             <div id="view-dates" class="nav-view view-center">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-[18px] font-bold" id="month-display">Месяц</h3>
                     <div class="flex gap-2">
-                        <button onclick="changeMonth(-1)" class="w-8 h-8 bg-iosPinkSoft text-iosPink rounded-full btn-press">❮</button>
-                        <button onclick="changeMonth(1)" class="w-8 h-8 bg-iosPinkSoft text-iosPink rounded-full btn-press">❯</button>
+                        <button onclick="changeMonth(-1)" class="w-8 h-8 bg-iosPinkSoft text-iosPink rounded-full btn-press font-bold">❮</button>
+                        <button onclick="changeMonth(1)" class="w-8 h-8 bg-iosPinkSoft text-iosPink rounded-full btn-press font-bold">❯</button>
                     </div>
                 </div>
                 <div class="grid grid-cols-7 gap-1 text-center text-[11px] text-iosGray mb-2">
@@ -155,45 +154,62 @@
 
             <!-- Шаг 2: Услуга -->
             <div id="view-services" class="nav-view view-right">
-                <button onclick="backToDates()" class="text-iosPink mb-3 btn-press flex items-center">
-                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <button onclick="backToDates()" class="text-iosPink mb-4 btn-press flex items-center text-[15px] font-medium">
+                    <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                     Назад
                 </button>
-                <h3 class="text-[24px] font-bold mb-1" id="selected-date">Дата</h3>
-                <p class="text-[13px] text-iosGray mb-3">Выберите услугу</p>
+                <h3 class="text-[26px] font-bold mb-1" id="selected-date">Дата</h3>
+                <p class="text-[14px] text-iosGray mb-4">Выберите услугу</p>
                 <div id="services-grid" class="space-y-2"></div>
             </div>
 
             <!-- Шаг 3: Время -->
             <div id="view-times" class="nav-view view-right">
-                <button onclick="backToServices()" class="text-iosPink mb-3 btn-press flex items-center">
-                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                    Назад
+                <button onclick="backToServices()" class="text-iosPink mb-4 btn-press flex items-center text-[15px] font-medium">
+                    <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    К услугам
                 </button>
-                <h3 class="text-[18px] font-bold mb-1" id="selected-service">Услуга</h3>
-                <p class="text-[13px] text-iosGray mb-3">Выберите время</p>
+                <h3 class="text-[20px] font-bold mb-1 leading-tight" id="selected-service">Услуга</h3>
+                <p class="text-[14px] text-iosGray mb-4">Доступное время</p>
                 <div id="times-grid" class="grid grid-cols-3 gap-2"></div>
             </div>
         </div>
     </section>
 
-    <!-- Связаться -->
+    <!-- Связаться с менеджером -->
     <section class="px-4 py-4">
-        <h2 class="text-[20px] font-bold mb-3 px-2">Связаться</h2>
-        <div class="bg-iosCard rounded-[20px] p-4 shadow-apple">
-            <textarea id="manager-message" rows="3" placeholder="Ваше сообщение..." class="w-full p-3 rounded-[16px] border border-iosPink/10 bg-black/5 text-[15px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 resize-none"></textarea>
-            <button onclick="sendToManager()" class="w-full mt-3 bg-iosPink text-white py-3 rounded-[18px] font-semibold btn-press">Отправить</button>
+        <h2 class="text-[20px] font-bold mb-3 px-2">Связаться с менеджером</h2>
+        <div class="bg-iosCard rounded-[24px] p-5 shadow-apple">
+            <p class="text-[15px] text-iosGray mb-4 px-1">Опишите ваш вопрос, и мы свяжемся с вами в ближайшее время</p>
+            <div class="flex flex-col gap-3">
+                <textarea 
+                    id="manager-message" 
+                    rows="4" 
+                    placeholder="Введите ваше сообщение..." 
+                    class="w-full p-4 rounded-[20px] border border-iosPink/10 bg-black/5 text-iosText text-[15px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 resize-none caret-iosText"
+                    style="caret-color: #1D1D1F;"
+                ></textarea>
+                <button 
+                    onclick="sendToManager()" 
+                    class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press"
+                >
+                    Отправить
+                </button>
+            </div>
         </div>
     </section>
 
     <!-- Соцсети -->
     <section class="px-4 py-4 pb-8">
         <div class="flex justify-center gap-4">
-            <a href="#" id="instagram-link" class="w-12 h-12 rounded-full bg-iosPink text-white flex items-center justify-center btn-press">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            <a href="#" id="instagram-link" class="w-14 h-14 rounded-full bg-iosPink text-white flex items-center justify-center btn-press shadow-apple-btn">
+                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             </a>
         </div>
     </section>
+
+    <!-- Модальное окно для сегодня/завтра -->
+    <div id="manager-modal-container"></div>
 
     <script>
         const tg = window.Telegram.WebApp;
@@ -218,6 +234,13 @@
 
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         const monthNamesGen = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+
+        // Закрытие клавиатуры при клике вне полей
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
+                document.activeElement.blur();
+            }
+        });
 
         // Загрузка данных
         async function loadData() {
@@ -292,14 +315,14 @@
                 return;
             }
             container.innerHTML = portfolio.map((cat, i) => `
-                <div class="bg-iosCard rounded-[18px] shadow-apple overflow-hidden">
-                    <button class="w-full px-4 py-3 flex justify-between items-center card-press" onclick="toggleCategory('cat-${i}')">
-                        <span class="text-[16px] font-semibold">${cat.name}</span>
+                <div class="bg-iosCard rounded-[20px] shadow-apple overflow-hidden">
+                    <button class="w-full px-5 py-4 flex justify-between items-center card-press outline-none" onclick="toggleCategory('cat-${i}')">
+                        <span class="text-[17px] font-semibold">${cat.name}</span>
                         <svg class="chevron w-5 h-5 text-iosGray" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div id="cat-${i}" class="category-content">
-                        <div class="px-4 pb-4 grid grid-cols-2 gap-2">
-                            ${cat.images.map(img => `<img src="${img.file_url || 'https://via.placeholder.com/200'}" class="w-full h-32 object-cover rounded-[12px]">`).join('')}
+                        <div class="px-5 pb-5 grid grid-cols-2 gap-3 pt-1">
+                            ${cat.images.map(img => `<img src="${img.file_url || 'https://via.placeholder.com/200'}" class="w-full h-40 object-cover rounded-[16px] shadow-sm">`).join('')}
                         </div>
                     </div>
                 </div>
@@ -341,13 +364,13 @@
                 const needsManagerApproval = isToday || isTomorrow;
                 const isDisabled = isPast || isTooFar || isDayOff;
 
-                let btnClass = "w-9 h-9 flex items-center justify-center rounded-full text-[14px] ";
+                let btnClass = "w-10 h-10 flex items-center justify-center rounded-full text-[16px] transition-all ";
                 if (isDisabled) {
                     btnClass += "text-black/20 cursor-not-allowed";
                 } else if (needsManagerApproval) {
                     btnClass += "text-iosPink bg-iosPinkSoft/30 border border-iosPink/20 btn-press cursor-pointer";
                 } else {
-                    btnClass += "text-iosText hover:bg-iosPinkSoft btn-press cursor-pointer";
+                    btnClass += "text-iosText hover:bg-iosPinkSoft hover:text-iosPink btn-press cursor-pointer";
                 }
 
                 grid.innerHTML += `<button class="${btnClass}" ${isDisabled ? 'disabled' : `onclick="handleDateClick('${dateStr}', ${day}, ${month}, ${needsManagerApproval})"`}>${day}</button>`;
@@ -361,18 +384,39 @@
 
         function handleDateClick(dateStr, day, month, needsManagerApproval) {
             if (needsManagerApproval) {
-                tg.showConfirm(
-                    `Запись на ${day} ${monthNamesGen[month]} возможна только по договорённости с менеджером. Перейти к связи?`,
-                    function(confirmed) {
-                        if (confirmed) {
-                            document.querySelector('#booking + section').scrollIntoView({ behavior: 'smooth' });
-                            document.getElementById('manager-message').focus();
-                        }
-                    }
-                );
+                // Показываем модальное окно
+                const modalHtml = `
+                    <div id="manager-modal" class="fixed inset-0 z-[100] flex items-end justify-center bg-black/50" onclick="closeManagerModal()">
+                        <div class="bg-iosCard w-full max-w-md rounded-t-[24px] p-6 pb-10 animate-slide-up" onclick="event.stopPropagation()">
+                            <div class="w-12 h-1 bg-black/20 rounded-full mx-auto mb-6"></div>
+                            <h3 class="text-[20px] font-bold text-iosText mb-2">Запись на ${day} ${monthNamesGen[month]}</h3>
+                            <p class="text-[15px] text-iosGray mb-6 leading-relaxed">К сожалению, на этот день запись возможна только по договорённости с менеджером. Напишите нам, и мы подберём удобное время!</p>
+                            <button onclick="goToManagerFromModal()" class="w-full bg-iosPink text-white py-4 rounded-[20px] text-[17px] font-semibold shadow-apple-btn btn-press mb-3">
+                                Связаться с менеджером
+                            </button>
+                            <button onclick="closeManagerModal()" class="w-full bg-black/5 text-iosText py-4 rounded-[20px] text-[17px] font-medium btn-press">
+                                Отмена
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
             } else {
                 goToServices(dateStr, day, month);
             }
+        }
+
+        function closeManagerModal() {
+            const modal = document.getElementById('manager-modal');
+            if (modal) modal.remove();
+        }
+
+        function goToManagerFromModal() {
+            closeManagerModal();
+            document.querySelector('#booking + section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                document.getElementById('manager-message').focus();
+            }, 500);
         }
 
         function goToServices(dateStr, day, month) {
@@ -384,9 +428,14 @@
             
             const grid = document.getElementById('services-grid');
             grid.innerHTML = services.map(s => `
-                <button onclick="goToTimes('${s.name}', ${s.duration_slots})" class="w-full text-left p-3 rounded-[16px] border border-black/5 bg-iosCard btn-press">
-                    <h4 class="text-[15px] font-semibold">${s.name}</h4>
-                    <p class="text-[12px] text-iosGray">${s.duration_slots}ч • ${s.price} ₽</p>
+                <button onclick="goToTimes('${s.name}', ${s.duration_slots})" class="w-full text-left p-4 rounded-[20px] border border-black/5 bg-iosCard shadow-sm transition-all flex justify-between items-center">
+                    <div>
+                        <h4 class="text-[17px] font-semibold text-iosText">${s.name}</h4>
+                        <p class="text-[13px] text-iosGray mt-1">${s.duration_slots}ч • ${s.price} ₽</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center text-iosGray">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
                 </button>
             `).join('');
 
@@ -414,7 +463,7 @@
             
             const grid = document.getElementById('times-grid');
             grid.innerHTML = timeSlots.map(slot => `
-                <button onclick="selectTime('${slot.time}', ${duration})" class="py-2 rounded-[12px] text-[14px] bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10">
+                <button onclick="selectTime('${slot.time}', ${duration})" class="py-3 rounded-[16px] text-[16px] font-medium transition-all bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10 hover:bg-iosPinkSoft">
                     ${slot.time}
                 </button>
             `).join('');
@@ -436,12 +485,12 @@
 
         function selectTime(time, duration) {
             document.querySelectorAll('#times-grid button').forEach(b => {
-                b.className = "py-2 rounded-[12px] text-[14px] bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10";
+                b.className = "py-3 rounded-[16px] text-[16px] font-medium transition-all bg-iosPinkSoft/40 text-iosPink btn-press border border-iosPink/10 hover:bg-iosPinkSoft";
             });
-            event.target.className = "py-2 rounded-[12px] text-[14px] bg-iosPink text-white font-bold btn-press shadow-apple-btn";
+            event.target.className = "py-3 rounded-[16px] text-[16px] font-bold transition-all bg-iosPink text-white shadow-apple-btn scale-105";
             
             selectedTime = time;
-            tg.MainButton.setText(`ЗАПИСАТЬСЯ: ${time}`);
+            tg.MainButton.setText(`ПОДТВЕРДИТЬ: ${time}`);
             tg.MainButton.show();
         }
 
@@ -476,7 +525,7 @@
         function sendToManager() {
             const message = document.getElementById('manager-message').value.trim();
             if (!message) {
-                tg.showAlert('Введите сообщение');
+                tg.showAlert('Пожалуйста, введите сообщение');
                 return;
             }
 
@@ -493,6 +542,7 @@
                 if (data.ok) {
                     tg.showAlert('✅ Отправлено!');
                     document.getElementById('manager-message').value = '';
+                    document.getElementById('manager-message').blur();
                 }
             });
         }
