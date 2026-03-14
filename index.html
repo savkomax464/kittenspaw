@@ -388,7 +388,7 @@
                         <h3 class="text-[15px] font-semibold">${s.name}</h3>
                         <p class="text-[12px] text-iosGray">${s.description || ''} • ${s.duration_slots}ч</p>
                     </div>
-                    <span class="text-[15px] font-medium text-iosPink">${s.price} ₽</span>
+                    <span class="text-[15px] font-medium text-iosPink">${s.price} BYN</span>
                 </div>
             `).join('');
         }
@@ -517,7 +517,7 @@
                 <button onclick="goToTimes('${s.name}', ${s.duration_slots})" class="w-full text-left p-4 rounded-[20px] border border-black/5 bg-iosCard shadow-sm transition-all flex justify-between items-center">
                     <div>
                         <h4 class="text-[17px] font-semibold text-iosText">${s.name}</h4>
-                        <p class="text-[13px] text-iosGray mt-1">${s.duration_slots}ч • ${s.price} ₽</p>
+                        <p class="text-[13px] text-iosGray mt-1">${s.duration_slots}ч • ${s.price} BYN</p>
                     </div>
                     <div class="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center text-iosGray">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -639,7 +639,7 @@
                         <input 
                             type="tel" 
                             id="phone-input" 
-                            placeholder="+7 (999) 000-00-00"
+                            placeholder="+375 (29) 123-45-67"
                             class="w-full p-4 rounded-[20px] border border-iosPink/10 bg-black/5 text-iosText text-[17px] focus:outline-none focus:ring-2 focus:ring-iosPink/30 mb-4"
                             oninput="formatPhone(this)"
                         />
@@ -669,14 +669,20 @@
 
         function formatPhone(input) {
             let phone = input.value.replace(/\D/g, '');
-            if (phone.startsWith('7')) phone = phone.substring(1);
-            if (phone.length > 10) phone = phone.substring(0, 10);
             
-            let formatted = '+7';
-            if (phone.length > 0) formatted += ' (' + phone.substring(0, 3);
-            if (phone.length >= 3) formatted += ') ' + phone.substring(3, 6);
-            if (phone.length >= 6) formatted += '-' + phone.substring(6, 8);
-            if (phone.length >= 8) formatted += '-' + phone.substring(8, 10);
+            // Удаляем 375 если есть в начале
+            if (phone.startsWith('375')) phone = phone.substring(3);
+            // Или 8 если есть
+            if (phone.startsWith('8')) phone = phone.substring(1);
+            
+            // Ограничиваем 9 цифрами (после кода 375)
+            if (phone.length > 9) phone = phone.substring(0, 9);
+            
+            let formatted = '+375';
+            if (phone.length > 0) formatted += ' (' + phone.substring(0, 2);
+            if (phone.length >= 2) formatted += ') ' + phone.substring(2, 5);
+            if (phone.length >= 5) formatted += '-' + phone.substring(5, 7);
+            if (phone.length >= 7) formatted += '-' + phone.substring(7, 9);
             
             input.value = formatted;
         }
@@ -685,7 +691,7 @@
             const phoneInput = document.getElementById('phone-input');
             const phone = phoneInput.value.replace(/\D/g, '');
             
-            if (phone.length < 10) {
+            if (phone.length < 12) {  // 375 + 9 цифр = 12
                 tg.showAlert('Пожалуйста, введите корректный номер телефона');
                 return;
             }
@@ -694,7 +700,7 @@
             const payload = {
                 user_id: user.id,
                 client_name: user.first_name || 'Клиент',
-                phone: '+' + phone,
+                phone: '+' + phone,  // +375...
                 service: selectedService,
                 date: selectedDate,
                 time: selectedTime,
