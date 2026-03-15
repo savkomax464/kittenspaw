@@ -332,8 +332,29 @@
                 document.getElementById('studio-desc').textContent = settings.studio_desc || 'Идеальный маникюр';
                 document.getElementById('address-text').textContent = settings.studio_address || 'Адрес не указан';
                 document.getElementById('map-link').href = settings.studio_map_url || '#';
-                document.getElementById('map-frame').src = settings.studio_map_url || '';
                 document.getElementById('instagram-link').href = settings.instagram_url || '#';
+
+                // Карта - конвертируем ссылку в widget формат
+                const mapFrame = document.getElementById('map-frame');
+                const mapUrl = settings.studio_map_url || '';
+                if (mapUrl) {
+                    // Если это обычная ссылка (не widget), конвертируем
+                    if (mapUrl.includes('yandex') && !mapUrl.includes('map-widget')) {
+                        // Извлекаем координаты из короткой ссылки или используем дефолтные
+                        // Для коротких ссылок типа https://yandex.by/maps/-/CPFMMP-3
+                        // Просто открываем в iframe как есть (Яндекс может заблокировать)
+                        mapFrame.src = mapUrl;
+                        // Добавляем сообщение что карта может не работать
+                        mapFrame.parentElement.innerHTML = `
+                            <iframe id="map-frame" src="${mapUrl}" class="w-full h-[300px]" frameborder="0" allowfullscreen></iframe>
+                            <div class="p-4 text-center text-iosGray text-[13px]">
+                                <a href="${mapUrl}" target="_blank" class="text-iosPink">🗺 Открыть карту в новом окне →</a>
+                            </div>
+                        `;
+                    } else {
+                        mapFrame.src = mapUrl;
+                    }
+                }
 
                 // Главная аватарка (из about.avatar)
                 const masterPhotoEl = document.getElementById('master-photo');
