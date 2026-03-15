@@ -150,9 +150,6 @@
     <section class="px-4 py-4">
         <h2 class="text-[20px] font-bold mb-3 px-2">Почему я?</h2>
         <div class="bg-iosCard rounded-[24px] p-5 shadow-apple">
-            <div class="w-24 h-24 mb-4 rounded-full overflow-hidden shadow-apple border-2 border-iosPinkSoft mx-auto">
-                <img src="" alt="Аватар" id="about-avatar" class="w-full h-full object-cover" style="display: none;">
-            </div>
             <p class="text-[15px] text-iosGray mb-4 leading-relaxed" id="about-text">Загрузка...</p>
             <div class="space-y-3" id="about-advantages">
                 <div class="text-center py-4 text-iosGray">Загрузка...</div>
@@ -338,13 +335,10 @@
                 document.getElementById('map-frame').src = settings.studio_map_url || '';
                 document.getElementById('instagram-link').href = settings.instagram_url || '#';
 
-                // Обо мне - аватар
-                const avatarEl = document.getElementById('about-avatar');
+                // Главная аватарка (из about.avatar)
+                const masterPhotoEl = document.getElementById('master-photo');
                 if (about.avatar) {
-                    avatarEl.src = about.avatar;
-                    avatarEl.style.display = 'block';
-                } else {
-                    avatarEl.style.display = 'none';
+                    masterPhotoEl.src = about.avatar;
                 }
 
                 // Обо мне - текст
