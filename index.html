@@ -310,12 +310,11 @@
         // Загрузка данных
         async function loadData() {
             try {
-                const [settingsRes, servicesRes, portfolioRes, scheduleRes, daysOffRes, aboutRes] = await Promise.all([
+                const [settingsRes, servicesRes, portfolioRes, scheduleRes, aboutRes] = await Promise.all([
                     fetch(`${API_URL}/api/settings`),
                     fetch(`${API_URL}/api/services`),
                     fetch(`${API_URL}/api/portfolio`),
                     fetch(`${API_URL}/api/schedule`),
-                    fetch(`${API_URL}/api/days-off`),
                     fetch(`${API_URL}/api/about`)
                 ]);
 
@@ -324,7 +323,6 @@
                 portfolio = await portfolioRes.json();
                 const schedule = await scheduleRes.json();
                 timeSlots = schedule.slots || [];
-                daysOff = await daysOffRes.json();
                 const about = await aboutRes.json();
 
                 // Применяем настройки
@@ -480,10 +478,24 @@
         }
 
         // Календарь
-        function renderCalendar() {
+        async function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
+            const monthStr = `${year}-${String(month+1).padStart(2,'0')}`;
             document.getElementById('month-display').textContent = `${monthNames[month]} ${year}`;
+
+            // Загружаем выходные для этого месяца
+            try {
+                const res = await fetch(`${API_URL}/api/days-off`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ month: monthStr })
+                });
+                daysOff = await res.json();
+            } catch (e) {
+                console.error('Load days off error:', e);
+                daysOff = [];
+            }
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -501,7 +513,7 @@
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateObj = new Date(year, month, day);
                 const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-                
+
                 const isPast = dateObj < today;
                 const isTooFar = dateObj > maxDate;
                 const isDayOff = daysOff.includes(dateStr);
