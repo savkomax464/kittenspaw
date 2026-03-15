@@ -150,16 +150,12 @@
     <section class="px-4 py-4">
         <h2 class="text-[20px] font-bold mb-3 px-2">Почему я?</h2>
         <div class="bg-iosCard rounded-[24px] p-5 shadow-apple">
-            <p class="text-[15px] text-iosGray mb-4 leading-relaxed">Наш приоритет — здоровье ваших ногтей и идеальный блик, который собирает комплименты.</p>
-            <div class="space-y-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-iosPinkSoft flex items-center justify-center text-iosPink">✦</div>
-                    <span class="text-[15px] font-medium">100% стерилизация (Сухожар)</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-iosPinkSoft flex items-center justify-center text-iosPink">✦</div>
-                    <span class="text-[15px] font-medium">Одноразовые расходники</span>
-                </div>
+            <div class="w-24 h-24 mb-4 rounded-full overflow-hidden shadow-apple border-2 border-iosPinkSoft mx-auto">
+                <img src="" alt="Аватар" id="about-avatar" class="w-full h-full object-cover" style="display: none;">
+            </div>
+            <p class="text-[15px] text-iosGray mb-4 leading-relaxed" id="about-text">Загрузка...</p>
+            <div class="space-y-3" id="about-advantages">
+                <div class="text-center py-4 text-iosGray">Загрузка...</div>
             </div>
         </div>
     </section>
@@ -317,12 +313,13 @@
         // Загрузка данных
         async function loadData() {
             try {
-                const [settingsRes, servicesRes, portfolioRes, scheduleRes, daysOffRes] = await Promise.all([
+                const [settingsRes, servicesRes, portfolioRes, scheduleRes, daysOffRes, aboutRes] = await Promise.all([
                     fetch(`${API_URL}/api/settings`),
                     fetch(`${API_URL}/api/services`),
                     fetch(`${API_URL}/api/portfolio`),
                     fetch(`${API_URL}/api/schedule`),
-                    fetch(`${API_URL}/api/days-off`)
+                    fetch(`${API_URL}/api/days-off`),
+                    fetch(`${API_URL}/api/about`)
                 ]);
 
                 settings = await settingsRes.json();
@@ -331,6 +328,7 @@
                 const schedule = await scheduleRes.json();
                 timeSlots = schedule.slots || [];
                 daysOff = await daysOffRes.json();
+                const about = await aboutRes.json();
 
                 // Применяем настройки
                 document.getElementById('studio-name').textContent = settings.studio_name || 'Kittenspaw';
@@ -339,6 +337,31 @@
                 document.getElementById('map-link').href = settings.studio_map_url || '#';
                 document.getElementById('map-frame').src = settings.studio_map_url || '';
                 document.getElementById('instagram-link').href = settings.instagram_url || '#';
+
+                // Обо мне - аватар
+                const avatarEl = document.getElementById('about-avatar');
+                if (about.avatar) {
+                    avatarEl.src = about.avatar;
+                    avatarEl.style.display = 'block';
+                } else {
+                    avatarEl.style.display = 'none';
+                }
+
+                // Обо мне - текст
+                document.getElementById('about-text').textContent = about.text || 'Загрузка...';
+
+                // Обо мне - преимущества
+                const advantagesContainer = document.getElementById('about-advantages');
+                if (about.advantages && about.advantages.length > 0) {
+                    advantagesContainer.innerHTML = about.advantages.map(a => `
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-iosPinkSoft flex items-center justify-center text-iosPink">✦</div>
+                            <span class="text-[15px] font-medium">${a.text}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    advantagesContainer.innerHTML = '<div class="text-center py-4 text-iosGray">Нет преимуществ</div>';
+                }
 
                 // Видео маршрута
                 const videoEl = document.getElementById('video-route');
